@@ -10,14 +10,14 @@ posts = [
     },
 ]
 
-def home(request):
+def index(request):
     context = {
         'posts': posts
     }
-    return render(request, 'bookstore/home.html', context)
+    return render(request, 'index.html', context)
 
 def about(request):
-    return render(request, 'bookstore/about.html', {'title': 'About'})
+    return render(request, 'about.html', {'title': 'About'})
 
 def wishlist(request):
-    return render(request, 'bookstore/wishlist.html', {'title': 'Wishlist'})
+    return render(request, 'wishlist.html', {'title': 'Wishlist'})
