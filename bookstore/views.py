@@ -18,3 +18,6 @@ def home(request):
 
 def about(request):
     return render(request, 'bookstore/about.html', {'title': 'About'})
+
+def wishlist(request):
+    return render(request, 'bookstore/wishlist.html', {'title': 'Wishlist'})
