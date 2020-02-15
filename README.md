@@ -1,5 +1,15 @@
 # CEN 4010 Project: GeekText
+---
 
+Proudly Developed By: <br>
++ **Jose Fernandez De Castro** <br>
++ **Amanda Fernandez Perez** <br>
++ **Eitan Flor** <br>
++ **Dany Franco** <br>
++ **Daniel Fuentes** <br>
++ **Yeilys Fundora** <br>
+
+---
 An online web application bookstore which targets a particular niche in technology. The application named, # GeekText (think of Thinkgeek meets Barnes & Noble) will support the following features:
 
 ## Feature 1: Book Browsing and Sorting
