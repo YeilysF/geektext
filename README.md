@@ -21,7 +21,7 @@ DESCRIPTION: Allow user to browse books by genre, top sellers in our
 book store, and book rating with pagination based on 10 or 20 results. Allow Sort by
 book title, author, price, book rating, and release date.
 
-## Feature 2: Profile Management
+## Feature 2: Profile Management 
 
 Users can create and maintain their profiles rather than enter in
 their information each time they order
