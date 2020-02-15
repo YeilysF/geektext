@@ -62,3 +62,5 @@ class Book(models.Model):
 
     class Meta:
         ordering = ['book_title']
+
+#class ShoppingCart (models.Model):
