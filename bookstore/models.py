@@ -52,7 +52,7 @@ class Book(models.Model):
     genre = models.ForeignKey('Genre', default = 1, on_delete = models.CASCADE)
     publisher = models.ForeignKey('Publisher', default = 1, on_delete = models.CASCADE)
     release_date = models.DateField(null=True)
-    rating = models.DecimalField(decimal_places=2, max_digits=2, default=0)
+    rating = models.DecimalField(decimal_places=2, max_digits=3, default=0)
 
     def __str__(self):
         return self.book_title
