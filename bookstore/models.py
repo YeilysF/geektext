@@ -50,7 +50,7 @@ class Book(models.Model):
                             help_text='13 Character <a href="https://www.isbn-international.org/content/what-isbn">ISBN number</a>')
 
     genre = models.ManyToManyField(Genre, help_text='Select a genre for this book')
-    publisher = models.ForeignKey('Publisher', default = 1, on_delete = models.CASCADE)
+    publisher = models.ForeignKey('Publisher', default=1, on_delete=models.CASCADE)
     release_date = models.DateField(null=True)
     rating = models.DecimalField(decimal_places=2, max_digits=2, default=0)
 
@@ -63,19 +63,11 @@ class Book(models.Model):
     class Meta:
         ordering = ['book_title']
 
-class ShoppingCart (models.Model):
+
+class ShoppingCart(models.Model):
     quantity = models.IntegerField(blank=True, null=True)
     active = models.BooleanField(default=True)
     time_stamp = models.DateField(blank=True, null=True)
     expire_date = models.DateField(blank=True, null=True)
-    #include payment type
+    # include payment type
     payment_type = models.CharField(max_length=100, null=True)
-
-
-
-
-
-
-
-
-

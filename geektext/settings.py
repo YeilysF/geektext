@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'bookstore.apps.BookstoreConfig',
     'users.apps.UsersConfig',
     'crispy_forms',
+    'django_countries',
 ]
 
 MIDDLEWARE = [
