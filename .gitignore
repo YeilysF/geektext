@@ -1,9 +1,9 @@
- Django #
+# Django #
 *.log
 *.pot
 *.pyc
 __pycache__
-media
+profile_pics/
 
 # Backup files # 
 *.bak 
