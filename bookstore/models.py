@@ -43,7 +43,7 @@ class Author(models.Model):
 # Book Model - still some data items to be tweaked and others to be added such as comments, etc.
 class Book(models.Model):
     book_title = models.CharField(max_length=200)
-    book_cover = models.FileField(null=True, blank=True)
+    book_cover = models.ImageField(upload_to="gallery")
     author = models.ForeignKey('Author', default=1, on_delete=models.CASCADE)
     price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     summary = models.TextField(max_length=1000, help_text='Enter a brief description of the book')
