@@ -47,10 +47,11 @@ class Book(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     summary = models.TextField(max_length=1000, help_text='Enter a brief description of the book')
     isbn = models.CharField('ISBN', max_length=13,
-                            help_text='13 Character <a href="https://www.isbn-international.org/content/what-isbn">ISBN number</a>')
+                            help_text='13 Character <a href="https://www.isbn-international.org/content/what-isbn'
+                                      '">ISBN number</a>')
 
     genre = models.ManyToManyField(Genre, help_text='Select a genre for this book')
-    publisher = models.ForeignKey('Publisher', default = 1, on_delete = models.CASCADE)
+    publisher = models.ForeignKey('Publisher', default=1, on_delete=models.CASCADE)
     release_date = models.DateField(null=True)
     rating = models.DecimalField(decimal_places=2, max_digits=2, default=0)
 
@@ -63,13 +64,15 @@ class Book(models.Model):
     class Meta:
         ordering = ['book_title']
 
-class ShoppingCart (models.Model):
+
+class ShoppingCart(models.Model):
     quantity = models.IntegerField(blank=True, null=True)
     active = models.BooleanField(default=True)
     time_stamp = models.DateField(blank=True, null=True)
     expire_date = models.DateField(blank=True, null=True)
-    #include payment type
+    # include payment type
     payment_type = models.CharField(max_length=100, null=True)
+
 
 # Contact/Form Model
 class ContactForm(forms.Form):
