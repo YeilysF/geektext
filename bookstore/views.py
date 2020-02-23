@@ -1,22 +1,13 @@
 from django.shortcuts import render
-
-# from django.http import HttpResponse
-
-posts = [
-    {
-        'author': 'Eitan Flor',
-        'title': 'Review for Harry Potter',
-        'content': 'Book Review Details can be here',
-        'date_posted': 'January 1, 2020'
-    },
-]
+from bookstore.models import Book, Author, Genre
+from django.views import generic
 
 
 def index(request):
-    context = {
-        'posts': posts
-    }
-    return render(request, 'index.html', context)
+    model = Book
+    queryset = model.objects.all()
+    context = {'my_book_list': queryset }
+    return render(request, 'index.html', context=context)
 
 
 def about(request):
