@@ -12,6 +12,8 @@ Proudly Developed By: <br>
 ---
 An online web application bookstore which targets a particular niche in technology. The application named, # GeekText (think of Thinkgeek meets Barnes & Noble) will support the following features:
 
+testing push after deleting sshkey
+
 ## Feature 1: Book Browsing and Sorting
 
 Users will have a simple and enjoyable way to discover new books and
