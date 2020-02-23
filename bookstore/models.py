@@ -2,6 +2,7 @@ from django.db import models
 from django.urls import reverse
 from django import forms
 
+
 class Genre(models.Model):
     # Book Genres ; not currently hardcoded but can added via admin app
     name = models.CharField(max_length=200, help_text='Enter a book genre (e.g. Science Fiction)')
