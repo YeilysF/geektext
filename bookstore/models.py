@@ -1,6 +1,6 @@
 from django.db import models
 from django.urls import reverse
-
+from django import forms
 
 class Genre(models.Model):
     # Book Genres ; not currently hardcoded but can added via admin app
@@ -70,3 +70,9 @@ class ShoppingCart (models.Model):
     expire_date = models.DateField(blank=True, null=True)
     #include payment type
     payment_type = models.CharField(max_length=100, null=True)
+
+# Contact/Form Model
+class ContactForm(forms.Form):
+    name = forms.CharField(max_length=100)
+    email = forms.EmailField()
+    message = forms.CharField(widget=forms.Textarea)

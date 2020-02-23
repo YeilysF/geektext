@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+  <h2>Contact Us</h2>
+
+  <form align='left' method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+      <input align='left' type="submit" value="Submit" />
+  </form>
+
+{% endblock content %}

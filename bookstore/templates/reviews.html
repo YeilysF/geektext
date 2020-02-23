@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+    {% for review in reviews %}
+        <article class="media content-section">
+          <div class="media-body">
+            <div class="article-metadata">
+              <a class="mr-2" href="#">{{ review.author }}</a>
+              <small class="text-muted">{{ review.date_reviewed }}</small>
+            </div>
+            <h2><a class="article-title" href="#">{{ review.title }}</a></h2>
+            <p class="article-content">{{ review.content }}</p>
+          </div>
+        </article>
+    {% endfor %}
+
+{% endblock content %}
