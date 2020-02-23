@@ -1,15 +1,35 @@
 {% extends "base.html" %}
 {% block content %}
-    {% for post in posts %}
-        <article class="media content-section">
-          <div class="media-body">
-            <div class="article-metadata">
-              <a class="mr-2" href="#">{{ post.author }}</a>
-              <small class="text-muted">{{ post.date_posted }}</small>
-            </div>
-            <h2><a class="article-title" href="#">{{ post.title }}</a></h2>
-            <p class="article-content">{{ post.content }}</p>
-          </div>
-        </article>
+  <h1>Book List</h1>
+  {% if my_book_list %}
+  <ul>
+    {% for book in my_book_list %}
+      <li>
+        <a>{{ book.book_title }}</a>
+        <ul>
+          <li>
+              <a><strong>Summary: </strong> {{book.summary}}</a>
+          </li>
+                      <li>
+              <a><strong>Genre: </strong> {{book.genre.name}}</a>
+          </li>
+                      </li>
+                      <li>
+              <a><strong>Publisher: </strong> {{book.publisher}} <strong>Located in: </strong> {{ book.publisher.location }}</a>
+          </li>
+                      </li>
+                      </li>
+                      <li>
+              <a><strong>Rating: </strong></a> <a href="/comments">{{book.rating}}</a>
+          </li>
+        </ul>
+      </li>
     {% endfor %}
+  </ul>
+  {% else %}
+    <p>There are no books in the library.</p>
+  {% endif %}
 {% endblock content %}
+
+
+
