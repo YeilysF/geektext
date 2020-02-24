@@ -64,13 +64,15 @@
         </div>
         <div class="col-md-4">
           <div class="content-section">
-            <h3>Our Sidebar</h3>
-            <p class='text-muted'>You can put any information here you'd like.
+            <h3>Quick Access Toolbar</h3>
+            <p class='text-muted'>Navigate anywhere on our site, quick and easy, with our new side panel feature!
               <ul class="list-group">
-                <li class="list-group-item list-group-item-light">Latest Posts</li>
-                <li class="list-group-item list-group-item-light">Announcements</li>
-                <li class="list-group-item list-group-item-light">Calendars</li>
-                <li class="list-group-item list-group-item-light">etc</li>
+                <!-- Can Be Updated To Add Some Unique Functionality -->
+                <!-- Defaulting some links to reviews.html for now -->
+                <a href="{% url 'reviews' %}"><li class="list-group-item list-group-item-light">Latest Releases</li></a>
+                <a href="{% url 'reviews' %}"><li class="list-group-item list-group-item-light">Specials and Discounts</li>
+                <a href="{% url 'reviews' %}"><li class="list-group-item list-group-item-light">Recent Reviews</li></a>
+                <a href="{% url 'profile' %}"><li class="list-group-item list-group-item-light">My Profile</li></a>
               </ul>
             </p>
           </div>
