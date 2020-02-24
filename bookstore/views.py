@@ -1,6 +1,9 @@
 from django.shortcuts import render
-from .models import ContactForm
+from .models import ContactForm, Book, Author, Genre
 from django.http import HttpResponse
+from django.views import generic
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.db.models.functions import Lower
 
 review = [
     {
@@ -11,11 +14,21 @@ review = [
     },
 ]
 
+
+def index(request):
+    model = Book
+    queryset = model.objects.all()
+    context = {'my_book_list': queryset}
+    return render(request, 'index.html', context=context)
+
+
 def about(request):
     return render(request, 'about.html', {'title': 'About'})
 
+
 def books(request):
     return render(request, 'books.html', {'title': 'Books'})
+
 
 def contact(request):
     if request.method == 'POST':
@@ -32,8 +45,6 @@ def contact(request):
 
     return render(request, 'contact.html', {'form': form})
 
-def index(request):
-    return render(request, 'index.html', {'title': 'Home Page'})
 
 def reviews(request):
     context = {
@@ -41,18 +52,53 @@ def reviews(request):
     }
     return render(request, 'reviews.html', context)
 
+
 def wishlist(request):
     return render(request, 'wishlist.html', {'title': 'Wishlist'})
-from bookstore.models import Book, Author, Genre
-from django.views import generic
 
 
-def index(request):
+def browse_sort_view(request):
     model = Book
-    queryset = model.objects.all()
-    context = {'my_book_list': queryset }
-    return render(request, 'index.html', context=context)
 
+    order_by = request.GET.get('order_by')
+    direction = request.GET.get('direction')
+    ordering = Lower(order_by)
+    if direction == 'desc':
+        ordering = '-{}'.format(ordering)
+    p = (order_by == None)
+    q = (order_by != None)
+    genre_selection = request.GET.get('genre_selection')
+    genre_choice = Book.genre
+    genre_filter = (genre_selection != None)
+    # fiction_filter = (genre_selection=='fiction')
+    # nonfiction_filter = (genre_selection=='nonfiction')
 
-def about(request):
-    return render(request, 'about.html', {'title': 'About'})
+    # queryset = model.objects.all().order_by(ordering)
+    queryset2 = Genre.objects.all()
+    if genre_filter == True:
+        queryset = model.objects.all().filter(genre__name__contains=genre_selection).order_by(ordering)
+    else:
+        queryset = model.objects.all().filter().order_by(ordering)
+
+    page = request.GET.get('page', 1)
+
+    paginator = Paginator(queryset, 4)
+    try:
+        books = paginator.page(page)
+    except PageNotAnInteger:
+        books = paginator.page(1)
+    except EmptyPage:
+        books = paginator.page(paginator.num_pages)
+    context = {
+        'my_book_list': queryset,
+        'my_genre_list': queryset2,
+        'books': books,
+        'order_by': order_by,
+        'direction': direction,
+        'p': p,
+        'q': q,
+        'genre_selection': genre_selection,
+        'genre_choice': genre_choice,
+        'genre_filter': genre_filter
+    }
+    return render(request, 'browse_sort.html', context=context)
