@@ -106,3 +106,14 @@ class BookDetailView(generic.DetailView):
             raise Http404('Book does not exist')
 
         return render(request, 'bookstore/book_detail.html', context={'book': book})
+
+class AuthorDetailView(generic.DetailView):
+    model = Author
+
+    def author_detail_view(request, primary_key):
+        try:
+            author = Author.objects.get(pk=primary_key)
+        except Author.DoesNotExist:
+            raise Http404('Author does not exist')
+
+        return render(request, 'bookstore/author_detail.html', context={'author': author})
