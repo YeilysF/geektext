@@ -6,7 +6,7 @@ from users.models import Profile
 
 
 class Cart(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(Profile, on_delete=models.CASCADE)
 
     created_time = models.DateField(blank=True, null=True)
     updated_time = models.DateTimeField(blank=True, null=True)
@@ -50,7 +50,7 @@ class CartItem(models.Model):
 
 class OrderItem(models.Model):
     """A model that contains data for an item in an order."""
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1, null=True, blank=True)
 
@@ -62,10 +62,10 @@ class OrderItem(models.Model):
 
 
 class Order(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(Profile, on_delete=models.CASCADE)
     order_items = models.ManyToManyField(OrderItem)
-    book = models.ForeignKey(Book, on_delete=models.CASCADE)
-    cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
+    #book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    #cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
     active = models.BooleanField(default=True)
     # total = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
     created_time = models.DateField(blank=True, null=True)
@@ -79,7 +79,10 @@ class Order(models.Model):
     # payment = models.ForeignKey(Payment, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.user.username
+        return self.user
+
+    def get_cart_items(self):
+        return self.order_items.all()
 
     def get_total(self):
         total = 0
