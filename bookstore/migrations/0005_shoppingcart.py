@@ -21,4 +21,5 @@ class Migration(migrations.Migration):
                 ('payment_type', models.CharField(max_length=100, null=True)),
             ],
         ),
+        migrations.DeleteModel(name='ShoppingCart'),
     ]
