@@ -4,6 +4,7 @@
 *.pyc
 __pycache__
 profile_pics/
+db.sqlite3
 
 # Backup files # 
 *.bak 
