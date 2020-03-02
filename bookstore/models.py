@@ -55,7 +55,8 @@ class Book(models.Model):
     publisher = models.ForeignKey('Publisher', default=1, on_delete=models.CASCADE)
     release_date = models.DateField(null=True)
     rating = models.DecimalField(decimal_places=2, max_digits=3, default=0)
-    #stock = models.IntegerField()
+
+    # stock = models.IntegerField()
 
     def __str__(self):
         return self.book_title
@@ -66,6 +67,14 @@ class Book(models.Model):
     class Meta:
         ordering = ['book_title']
 
+
+class ShoppingCart(models.Model):
+    quantity = models.IntegerField(blank=True, null=True)
+    active = models.BooleanField(default=True)
+    time_stamp = models.DateField(blank=True, null=True)
+    expire_date = models.DateField(blank=True, null=True)
+    # include payment type
+    payment_type = models.CharField(max_length=100, null=True)
 
 
 # Contact/Form Model
