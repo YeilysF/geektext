@@ -125,7 +125,7 @@
     function myFunction2() {
       document.getElementById("myDropdown2").classList.toggle("show");
     }
-
+    
     // Close the dropdown if the user clicks outside of it
     window.onclick = function(event) {
       if (!event.target.matches('.dropbtn')) {
@@ -151,7 +151,7 @@
         <th style="text-align:center">Price</th>
     </tr>
     {% for book in books %}
-    <tr class="clickable text-center" onclick="window.location='{{ book.get_absolute_url }}'">
+    <tr>
     <td><img src="/media/{{ book.book_cover.url }}" width="200" height="280"/></td>
     <td>{{ book.book_title }}</td>
     <td>{{ book.author }}</td>
@@ -159,7 +159,6 @@
     <td>{{ book.rating }}</td>
     {% endfor %}
     </tr>
-
 </table>
 {% if p %}
 {% if books.has_other_pages %}

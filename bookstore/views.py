@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from .models import ContactForm, Book, Author, Genre
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse
 from django.views import generic
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models.functions import Lower
@@ -16,11 +16,18 @@ review = [
 
 
 def index(request):
-    return render(request, 'index.html')
+    model = Book
+    queryset = model.objects.all()
+    context = {'my_book_list': queryset}
+    return render(request, 'index.html', context=context)
 
 
 def about(request):
     return render(request, 'about.html', {'title': 'About'})
+
+
+def books(request):
+    return render(request, 'books.html', {'title': 'Books'})
 
 
 def contact(request):
@@ -95,25 +102,3 @@ def browse_sort_view(request):
         'genre_filter': genre_filter
     }
     return render(request, 'browse_sort.html', context=context)
-
-class BookDetailView(generic.DetailView):
-    model = Book
-
-    def book_detail_view(request, primary_key):
-        try:
-            book = Book.objects.get(pk=primary_key)
-        except Book.DoesNotExist:
-            raise Http404('Book does not exist')
-
-        return render(request, 'bookstore/book_detail.html', context={'book': book})
-
-class AuthorDetailView(generic.DetailView):
-    model = Author
-
-    def author_detail_view(request, primary_key):
-        try:
-            author = Author.objects.get(pk=primary_key)
-        except Author.DoesNotExist:
-            raise Http404('Author does not exist')
-
-        return render(request, 'bookstore/author_detail.html', context={'author': author})

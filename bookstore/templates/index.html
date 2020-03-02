@@ -1,6 +1,34 @@
 {% extends "base.html" %}
 {% block content %}
-    <p>Hello, do something</p>
+  <h1>Book List</h1>
+  {% if my_book_list %}
+  <ul>
+    {% for book in my_book_list %}
+      <li>
+        <a>{{ book.book_title }}</a>
+        <ul>
+          <li>
+              <a><strong>Summary: </strong> {{book.summary}}</a>
+          </li>
+                      <li>
+              <a><strong>Genre: </strong> {{book.genre.name}}</a>
+          </li>
+                      </li>
+                      <li>
+              <a><strong>Publisher: </strong> {{book.publisher}} <strong>Located in: </strong> {{ book.publisher.location }}</a>
+          </li>
+                      </li>
+                      </li>
+                      <li>
+              <a><strong>Rating: </strong></a> <a href="/comments">{{book.rating}}</a>
+          </li>
+        </ul>
+      </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+    <p>There are no books in the library.</p>
+  {% endif %}
 {% endblock content %}
 
 
