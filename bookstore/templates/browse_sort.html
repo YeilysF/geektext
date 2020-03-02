@@ -162,12 +162,7 @@
     <td>{{ book.rating }}</td>
     <td>{{ book.price }}</td>
         <td >
-            <div class="btn-group cart">
-                <form action="{% url 'cart:add_to_cart' %}" method="post">{% csrf_token %}
-                    <button class="btn btn-success" style="background-color: #428bca">Add to cart</button>
-                 </form>
-            </div>
-
+            <a class="btn btn-secondary" href="{% url 'cart:add_cart' book.id %}">Add to Cart</a>
         </td>
     {% endfor %}
     </tr>

@@ -6,46 +6,37 @@ from users.models import Profile
 
 
 class Cart(models.Model):
-    user = models.ForeignKey(Profile, on_delete=models.CASCADE)
-
+    cart_id = models.CharField(max_length=250, blank=True)
     created_time = models.DateField(blank=True, null=True)
-    updated_time = models.DateTimeField(blank=True, null=True)
-    active = models.BooleanField(default=True)
-    payment_type = models.CharField(max_length=100, null=True)
+
+    class Meta:
+        db_table = 'Cart'
+        ordering = ['created_time']
+
+    def __str__(self):
+        return self.cart_id
+
+    #user = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    #updated_time = models.DateTimeField(blank=True, null=True)
+    #active = models.BooleanField(default=True)
+    #payment_type = models.CharField(max_length=100, null=True)
     # payment = models.ForeignKey(Payment, on_delete=models.CASCADE)
-
-    def add_to_cart(self, book_id):
-        book = Book.objects.get(pk=book_id)
-        try:
-            exist_order = Order.objects.get(book=book, cart=self)
-            exist_order.quantity += 1
-            exist_order.save()
-
-        except Order.DoesNotExist:
-            new_order = Order.objects.create(book=book,cart=self,quantity=1)
-            new_order.save()
-
-    def remove_from_cart(self, book_id):
-        book = Book.objects.get(pk=book_id)
-        try:
-            exist_order = Order.objects.get(book=book, cart=self)
-            if exist_order.quantity > 1:
-                exist_order.quantity -= 1
-                exist_order.save()
-            else:
-                exist_order.delete()
-        except Order.DoesNotExist:
-            pass
-
 
 class CartItem(models.Model):
     """A model that contains data for an item in the shopping cart."""
-    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, null=True, blank=True)
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, null=True, blank=True)
     quantity = models.PositiveIntegerField(default=1, null=True, blank=True)
+    active = models.BooleanField(default=True)
+
+    class Meta:
+        db_table = 'CartItem'
+
+    def sub_total(self):
+        return self.book.price * self.quantity
 
     def __str__(self):
-        return '%s: %s' % (self.book.book_title, self.quantity)
+        return self.book
 
 
 class OrderItem(models.Model):
@@ -67,7 +58,7 @@ class Order(models.Model):
     #book = models.ForeignKey(Book, on_delete=models.CASCADE)
     #cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
     active = models.BooleanField(default=True)
-    # total = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
+    total = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
     created_time = models.DateField(blank=True, null=True)
     updated_time = models.DateField(blank=True, null=True)
 

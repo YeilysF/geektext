@@ -7,3 +7,5 @@ admin.site.register(CartItem)
 admin.site.register(Order)
 admin.site.register(SavedItem)
 admin.site.register(OrderItem)
+
+

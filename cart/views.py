@@ -5,53 +5,54 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 
 from bookstore.models import Book
-from cart.models import OrderItem, Order, Cart, SavedItem
+from cart.models import OrderItem, Order, Cart, SavedItem, CartItem
 from users.models import Profile
 
 
-def cart_view(request):
-    return render(request, 'cart_view.html')
-
+@login_required
+def cart_start(request):
+    cart = request.session.session_key
+    if not cart:
+        cart = request.session.create()
+    return cart
 
 @login_required
 def add_to_cart(request, book_id):
-    # get the user profile
-    user_profile = get_object_or_404(Profile, user=request.user)
-    # filter books by id
-    book = Book.objects.filter(id=book_id.get('book_id', ""))
-    if book in request.user.profile.books.all():
-        messages.info(request, 'You already own this book')
-        return redirect(reverse('my-book-list'))
-        # create orderItem of the selected product
-    order_item = OrderItem.objects.get_or_create(book=book)
-    # create order associated with the user
-    user_order = Order.objects.get_or_create(owner=user_profile, is_ordered=False)
-    user_order.items.add(order_item)
+    book = Book.objects.get(id=book_id)
+    try:
+        cart = Cart.objects.get(cart_id=cart_start(request))
+    except Cart.DoesNotExist:
+        cart = Cart.objects.create(cart_id=cart_start(request))
+    cart.save(),
+    try:
+        cart_item = CartItem.objects.get(book=book, cart=cart)
+        cart_item.quantity += 1
+        cart_item.save()
+    except CartItem.DoesNotExist:
+        cart_item = CartItem.objects.create(book=book, quantity=1, cart=cart)
+        cart_item.save()
+    return redirect('cart:cart_page')
 
-    # show confirmation message
-    messages.info(request, "item added to cart")
-    #return redirect(reverse('books:my-book-list'))
-
-@login_required()
 def remove_from_cart(request, book_id):
-    item_to_delete = OrderItem.objects.filter(pk=book_id)
-    if item_to_delete.exists():
-        item_to_delete[0].delete()
-        messages.info(request, "Book has been deleted")
+    cart =  Cart.objects.get(cart_id=cart_start(request))
+    book = get_object_or_404(Book, id=book_id)
+    cart_item = CartItem.objects.get(book=book,cart=cart)
+    if cart_item.quantity > 1:
+        cart_item.quantity -= 1
+        cart_item.save()
+    else:
+        cart_item.delete()
+    return redirect('cart:cart_page')
 
+# cart details
+def cart_page(request, total=0, counter=0, cart_items=None):
+    try:
+        cart = Cart.objects.get(cart_id=cart_start(request))
+        cart_items = CartItem.objects.filter(cart=cart, active=True)
+        for cart_item in cart_items:
+            total += (cart_item.book.price * cart_item.quantity)
+            counter += cart_item.quantity
+    except ObjectDoesNotExist:
+        pass
 
-def order_details(request, **kwargs):
-    exist_order = get_order(request)
-    context = {
-        'order': exist_order
-    }
-    return render(request, 'cart_view.html', context)
-
-def get_order(request):
-    # get order for the correct user
-    user_profile = get_object_or_404(Profile, user=request.user)
-    order = Order.objects.filter(user=user_profile, is_ordered=False)
-    if order.exists():
-        # get the only order in the list of filtered orders
-        return order[0]
-    return 0
+    return render(request, 'cart.html', dict(total=total, counter=counter, cart_items=cart_items))
