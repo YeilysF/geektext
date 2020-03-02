@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+
+    <style>
+div.details {
+  margin-top: 80px;
+}
+</style>
+    <div class = "details">
+    <p><img src="/media/{{ book.book_cover.url }}" width="200" height="280"/></p>
+    <p><strong>Title:</strong> {{ book.book_title }}</p>
+    <p><strong>Author:</strong> <a href="{% url 'author-detail' book.author.pk %}">{{ book.author }}</a></p> <!-- author detail link not yet defined -->
+    <p><strong>Summary:</strong> {{ book.summary }}</p>
+    <p><strong>ISBN:</strong> {{ book.isbn }}</p>
+    <p><strong>Genre:</strong> {{ book.genre}}</p>
+    <p><strong>Rating:</strong> {{ book.rating}}</p>
+        <p><strong>Publisher: </strong> {{book.publisher}} <strong>Located in: </strong> {{ book.publisher.location }}</p>
+    </div>
+{% endblock %}
+
