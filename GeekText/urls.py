@@ -21,11 +21,13 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.views.generic import RedirectView
 from users import views as user_view
+from cart import views as cart_view
 from bookstore.views import browse_sort_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('bookstore/', include('bookstore.urls')),
+    path('cart/', include('cart.urls', namespace='cart')),
     path('profile/', user_view.profile, name='profile'),
     path('register/', user_view.register, name='register'),
     path('login/', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
