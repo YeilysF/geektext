@@ -162,7 +162,8 @@
     <td>{{ book.rating }}</td>
     <td>{{ book.price }}</td>
         <td >
-            <a class="btn btn-secondary" href="{% url 'cart:add_cart' book.id %}">Add to Cart</a>
+            <a class="btn btn-success" style="background-color: #428bca" href="{% url 'cart:add_cart' book.id %}">Add to Cart</a>
+            <a class="btn btn-danger" style="background-color: orangered" href="">Add to Wishlist</a>
         </td>
     {% endfor %}
     </tr>

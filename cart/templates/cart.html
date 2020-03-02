@@ -8,21 +8,25 @@
 {% block title %}
     Cart - Perfect Shop
 {% endblock %}
-<div class="container">
+
 {% block content %}
     {% if not cart_items %}
-        <div>
-            <div class="text-center">
-                <h1 class="text-center my_title">Your Shopping Cart is Empty</h1>
-                <br>
-            </div>
+        <div class="card shopping-cart">
+            <div class="card-header bg-dark text-light">
+                <i class="fa fa-shopping-cart" aria-hidden="true"></i> Shopping cart</div>
+        </div>
+            <br>
+                <th class="text-center">Your Shopping Cart is Empty<br></th>
+            <br>
+                <a href="{% url 'browse_sort' %}" class="btn btn-warning"><i class="fa fa-angle-center"></i> Add to Shopping Cart</a>&nbsp;
+                <a href="" class="btn btn-secondary" style="background-color: #2196F3"><i class="fa fa-angle-center"></i> Go to Saved Items</a>
         </div>
     {% else %}
 <script src="https://use.fontawesome.com/c560c025cf.js"></script>
    <div class="card shopping-cart">
             <div class="card-header bg-dark text-light">
                 <i class="fa fa-shopping-cart" aria-hidden="true"></i> Shopping cart</div>
-        </div>
+   </div>
         <div class="row mx-auto">
             <div class="col-12 col-sm-12 col-md-12 col-lg-6 text-center">
                 <table class="table custom_table">
@@ -36,8 +40,7 @@
 							<th style="width:10%">Price</th>
 							<th style="width:8%">Quantity</th>
 							<th style="width:22%" class="text-center">Subtotal</th>
-                            <th style="width:8%">Action</th>
-							<th style="width:10%"></th>
+                            <th style="width:8%"></th>
 						</tr>
 					</thead>
                         </tr>
@@ -85,12 +88,16 @@
             </div>
         </div>
                 <tr>
-                    <td class="hidden-xs text-center"><strong><div class="total">Total: ${{ total }}</div></strong></td>
-                    <td><a href="{% url 'browse_sort' %}" class="btn btn-warning"><i class="fa fa-angle-left"></i> Continue Shopping</a></td>
-                    <td><a href="#" class="btn btn-success">Proceed to Checkout <i class="fa fa-angle-right"></i></a></td>
+                <td class="text-right">
+                    <a class="hidden-xs text-center"><strong><div class="total">Total: ${{ total }}</div></strong></a>
+                    <a href="{% url 'browse_sort' %}" class="btn btn-warning"><i class="fa fa-angle-left"></i> Continue Shopping</a>
+                    <a href="#" class="btn btn-success">Proceed to Checkout <i class="fa fa-angle-right"></i></a>
                     <br>
+                </td>
                 </tr>
         <br>
         </div>
+        </div>
     {% endif %}
 {% endblock %}
+
