@@ -1,3 +1,4 @@
+
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
 {% block content %}
@@ -9,16 +10,6 @@
           <p class="text-secondary">{{ user.email }}</p>
         </div>
       </div>
-        <form method="POST" enctype="multipart/form-data">
-            {%  csrf_token %}
-            <fieldset class="form-group">
-                <legend class="border-bottom mb-4">Profile Information</legend>
-                {{ user_form|crispy }}
-                {{ profile_form|crispy }}
-            </fieldset>
-            <div class="form-group">
-                <button class="btn btn-outline-info" type="Save">Save Changes</button>
-            </div>
-        </form>
+      <!-- FORM HERE -->
     </div>
 {% endblock content %}
