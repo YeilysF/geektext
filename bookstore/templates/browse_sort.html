@@ -1,4 +1,7 @@
 {% extends "base.html" %}
+<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.1/js/bootstrap.min.js"></script>
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 {% block content %}
     <h1>Browse & Sort Books</h1>
 
@@ -98,6 +101,7 @@
 }
 </style>
 
+
     <div class="dropdown">
     <button onclick="myFunction()" class="dropbtn">Browse by Genre</button>
     <div id="myDropdown" class="dropdown-content">
@@ -116,8 +120,9 @@
       <a href="?order_by=release_date&direction=asc">Date</a>
     </div>
     </div>
+
   <script>
-    /* When the user clicks on the button, 
+    /* When the user clicks on the button,
     toggle between hiding and showing the dropdown content */
     function myFunction() {
       document.getElementById("myDropdown").classList.toggle("show");
@@ -125,7 +130,6 @@
     function myFunction2() {
       document.getElementById("myDropdown2").classList.toggle("show");
     }
-    
     // Close the dropdown if the user clicks outside of it
     window.onclick = function(event) {
       if (!event.target.matches('.dropbtn')) {
@@ -145,7 +149,7 @@
     {% if books %}
     <tr>
         <th style="text-align:center">Cover</th>
-        <th style="text-align:center">Title</a>
+        <th style="text-align:center">Title</th>
         <th style="text-align:center">Author</th>
         <th style="text-align:center">Rating</th>
         <th style="text-align:center">Price</th>
@@ -156,7 +160,11 @@
     <td>{{ book.book_title }}</td>
     <td>{{ book.author }}</td>
     <td>{{ book.rating }}</td>
-    <td>{{ book.rating }}</td>
+    <td>{{ book.price }}</td>
+        <td >
+            <a class="btn btn-success" style="background-color: #428bca" href="{% url 'cart:add_cart' book.id %}">Add to Cart</a>
+            <a class="btn btn-danger" style="background-color: orangered" href="">Add to Wishlist</a>
+        </td>
     {% endfor %}
     </tr>
 </table>
@@ -183,7 +191,6 @@
 </ul>
 {% endif %}
 {% else %}
-    
       {% if books.has_other_pages %}
         <ul class="pagination">
           {% if books.has_previous %}
@@ -205,8 +212,9 @@
           {% endif %}
         </ul>
       {% endif %}
+{% endif %}
+    {% else %}
+      <p>There are no books in the library.</p>
     {% endif %}
-  {% else %}
-    <p>There are no books in the library.</p>
-  {% endif %}
+
 {% endblock content %}

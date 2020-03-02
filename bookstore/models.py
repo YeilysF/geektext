@@ -56,6 +56,8 @@ class Book(models.Model):
     release_date = models.DateField(null=True)
     rating = models.DecimalField(decimal_places=2, max_digits=3, default=0)
 
+    # stock = models.IntegerField()
+
     def __str__(self):
         return self.book_title
 
