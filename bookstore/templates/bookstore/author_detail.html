@@ -5,7 +5,15 @@
 div.details {
   margin-top: 80px;
 }
+{# li{#}
+{#        color: #2196F3;#}
+{#    }#}
+{##}
+{#    ul li::before {#}
+{#  color: black;#}
+{#}#}
 </style>
+
     <div class = "details">
     {% if author.middle_name == null %}
     <p><strong>Name:</strong> {{ author.first_name }} {{ author.last_name }}</p>
@@ -14,5 +22,15 @@ div.details {
         {% endif %}
     <p><strong>Date of Birth:</strong> {{ author.date_of_birth}}</p>
     <p><strong>Bio:</strong> {{ author.bio}}</p>
+
+        <strong>Books</strong>
+    {% for book in author.book_set.all %}
+
+         <ul>
+             <li>  <a href="{% url 'book-detail' book.pk %}">{{ book}}</a></li>
+         </ul>
+
+    {% endfor %}
     </div>
 {% endblock %}
+
