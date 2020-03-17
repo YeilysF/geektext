@@ -8,5 +8,5 @@ urlpatterns = [
     path('browse_sort/', views.browse_sort_view, name='browse_sort'),
     path('contact/', views.contact, name='contact'),
     path('reviews/', views.reviews, name='reviews'),
-    path('wishlist/', views.wishlist, name='wishlist'),
+    path('wishlist', views.wishlist, name='wishlist'),
 ]
