@@ -12,9 +12,10 @@ class Cart(models.Model):
     class Meta:
         db_table = 'Cart'
         ordering = ['created_time']
+        managed = False
 
     def __str__(self):
-        return self.cart_id
+        return self.cart_id 
 
     #user = models.ForeignKey(Profile, on_delete=models.CASCADE)
     #updated_time = models.DateTimeField(blank=True, null=True)
@@ -31,7 +32,7 @@ class CartItem(models.Model):
 
     class Meta:
         db_table = 'CartItem'
-
+        managed = False
     def sub_total(self):
         return self.book.price * self.quantity
 
@@ -41,8 +42,8 @@ class CartItem(models.Model):
 
 class OrderItem(models.Model):
     """A model that contains data for an item in an order."""
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name='orderuser')
-    book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='orderbook')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    book = models.ForeignKey(Book, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1, null=True, blank=True)
 
     def __str__(self):
@@ -53,7 +54,7 @@ class OrderItem(models.Model):
 
 
 class Order(models.Model):
-    user = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='orderuser')
+    user = models.ForeignKey(Profile, on_delete=models.CASCADE)
     order_items = models.ManyToManyField(OrderItem)
     #book = models.ForeignKey(Book, on_delete=models.CASCADE)
     #cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
@@ -82,7 +83,9 @@ class Order(models.Model):
         return total
 
 class SavedItem(models.Model):
-    book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='saveditembook')
+    book = models.ForeignKey(Book, on_delete=models.CASCADE)
 
     def __str__(self):
         return '%s' % self.book.book_title
+
+

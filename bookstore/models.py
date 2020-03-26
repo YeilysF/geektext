@@ -1,5 +1,6 @@
 from django.db import models
 from django.urls import reverse
+from django.contrib.auth.models import User
 from django import forms
 
 
@@ -56,6 +57,8 @@ class Book(models.Model):
     release_date = models.DateField(null=True)
     rating = models.DecimalField(decimal_places=2, max_digits=3, default=0)
 
+    # stock = models.IntegerField()
+
     def __str__(self):
         return self.book_title
 
@@ -80,3 +83,27 @@ class ContactForm(forms.Form):
     name = forms.CharField(max_length=100)
     email = forms.EmailField()
     message = forms.CharField(widget=forms.Textarea)
+
+
+# Wishlist
+class Wishlist(models.Model):
+    wishlist_name = models.CharField(max_length=100)
+    wishlist_user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    
+    def __str__(self):
+        return self.wishlist_name
+
+    class Meta:
+        ordering = ['id']
+
+
+# Wishlist
+class WishlistBook(models.Model):
+    wb_book = models.ForeignKey('Book', default=1, on_delete=models.CASCADE)
+    wb_wishlist = models.ForeignKey('Wishlist', default=1, on_delete=models.CASCADE) 
+
+    def __str__(self):
+        return self.id
+
+    class Meta:
+        ordering = ['id']

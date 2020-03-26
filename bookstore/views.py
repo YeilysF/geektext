@@ -1,5 +1,9 @@
-from django.shortcuts import render
-from .models import ContactForm, Book, Author, Genre
+from django.core.mail import send_mail
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from .forms import NewWishlistForm, UpdateWishlistForm
+from .models import ContactForm, Book, Author, Genre, Wishlist, WishlistBook
 from django.http import HttpResponse
 from django.views import generic
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -54,7 +58,97 @@ def reviews(request):
 
 
 def wishlist(request):
-    return render(request, 'wishlist.html', {'title': 'Wishlist'})
+    model = Wishlist
+    queryset = model.objects.filter(wishlist_user=request.user)
+    # return HttpResponse('Saved ALL OK')
+    context = {
+        'my_wishlists': queryset
+    }
+
+    # return HttpResponse(' OK')
+    return render(request, 'wishlist.html', context=context)
+
+
+def wishlist_add(request):
+    if request.method == 'POST':
+        form = NewWishlistForm(request.POST)
+        if form.is_valid():
+            wishlist = form.save()
+            wishlist.wishlist_user = request.user
+            wishlist.save()
+            wishlist_name = form.cleaned_data['wishlist_name']
+            messages.success(request, f'Wishlist created successfully.')
+            return redirect('wishlist')
+    else:
+        form = NewWishlistForm()
+    return render(request, 'wishlist_add.html', {'form': form})
+
+
+@login_required
+def wishlist_edit(request, wishlist_id):
+    if request.method == 'POST':
+        # return HttpResponse(wishlist_id)
+        form = UpdateWishlistForm(request.POST)
+        if form.is_valid():
+            wishlist = get_object_or_404(Wishlist, id=wishlist_id)
+            wishlist_name = form.cleaned_data['wishlist_name']
+            wishlist.wishlist_name = wishlist_name
+            wishlist.save()
+            messages.success(request, f'Wishlist changes saved successfully!')
+            return redirect('wishlist')
+    else:
+        wishlist = get_object_or_404(Wishlist, id=wishlist_id)
+        wishlist_form = UpdateWishlistForm(instance=wishlist)
+
+    context = {
+        'wishlist': wishlist,
+        'wishlist_form': wishlist_form,
+    }
+
+    return render(request, 'wishlist_edit.html', context)
+
+
+
+@login_required
+def wishlist_delete(request, wishlist_id):
+    if request.method == 'GET':
+        wishlist = get_object_or_404(Wishlist, id=wishlist_id)
+        wishlist.delete()
+        messages.success(request, f'Wishlist deleted successfully!')
+        return redirect('wishlist')
+
+
+@login_required
+def wishlist_book_remove(request, wishlist_book_id):
+    if request.method == 'GET':
+        wishlist_book = get_object_or_404(WishlistBook, id=wishlist_book_id)
+        wishlist_book.delete()
+        messages.success(request, f'Book removed from Wishlist successfully!')
+        return redirect('wishlist')
+
+
+
+@login_required
+def profile(request):
+    if request.method == 'POST':
+        user_form = UpdateUserForm(request.POST, instance=request.user)
+        profile_form = UpdateProfileForm(request.POST, request.FILES, instance=request.user.profile)
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+            messages.success(request, f'Profile changes saved successfully!')
+            return redirect('profile')
+    else:
+        user_form = UpdateUserForm(instance=request.user)
+        profile_form = UpdateProfileForm(instance=request.user.profile)
+
+    context = {
+        'user_form': user_form,
+        'profile_form': profile_form
+    }
+
+    return render(request, 'profile.html', context)
+
 
 
 def browse_sort_view(request):
@@ -89,6 +183,21 @@ def browse_sort_view(request):
         books = paginator.page(1)
     except EmptyPage:
         books = paginator.page(paginator.num_pages)
+
+    wishlists = Wishlist.objects.all()
+
+    wishlist_selection = request.GET.get('wishlist_selection')
+    is_wishlist = (wishlist_selection != None)
+    book_id = request.GET.get('book_id')
+    is_book = (book_id != None)
+    if is_wishlist == True and is_book == True:
+        book = get_object_or_404(Book, id=book_id)
+        wishlist = get_object_or_404(Wishlist, id=wishlist_selection)
+        obj = WishlistBook(wb_book=book, wb_wishlist=wishlist)
+        messages.success(request, f'Book added to wishlist successfully!')
+        obj.save()
+        return redirect('browse_sort')
+
     context = {
         'my_book_list': queryset,
         'my_genre_list': queryset2,
@@ -99,6 +208,7 @@ def browse_sort_view(request):
         'q': q,
         'genre_selection': genre_selection,
         'genre_choice': genre_choice,
-        'genre_filter': genre_filter
+        'genre_filter': genre_filter,
+        'wishlists': wishlists
     }
     return render(request, 'browse_sort.html', context=context)
