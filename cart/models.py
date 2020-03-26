@@ -12,9 +12,10 @@ class Cart(models.Model):
     class Meta:
         db_table = 'Cart'
         ordering = ['created_time']
+        managed = False
 
     def __str__(self):
-        return self.cart_id
+        return self.cart_id 
 
     #user = models.ForeignKey(Profile, on_delete=models.CASCADE)
     #updated_time = models.DateTimeField(blank=True, null=True)
@@ -31,7 +32,7 @@ class CartItem(models.Model):
 
     class Meta:
         db_table = 'CartItem'
-
+        managed = False
     def sub_total(self):
         return self.book.price * self.quantity
 

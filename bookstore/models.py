@@ -82,3 +82,26 @@ class ContactForm(forms.Form):
     name = forms.CharField(max_length=100)
     email = forms.EmailField()
     message = forms.CharField(widget=forms.Textarea)
+
+
+# Wishlist
+class Wishlist(models.Model):
+    wishlist_name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.wishlist_name
+
+    class Meta:
+        ordering = ['id']
+
+
+# Wishlist
+class WishlistBook(models.Model):
+    wb_book = models.ForeignKey('Book', default=1, on_delete=models.CASCADE)
+    wb_wishlist = models.ForeignKey('Wishlist', default=1, on_delete=models.CASCADE) 
+
+    def __str__(self):
+        return self.id
+
+    class Meta:
+        ordering = ['id']
