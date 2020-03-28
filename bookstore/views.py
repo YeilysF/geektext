@@ -22,6 +22,13 @@ def index(request):
 def about(request):
     return render(request, 'about.html', {'title': 'About'})
 
+def books(request):
+    books = Book.objects.all()
+    return render(request, 'books.html', {'books' : books})
+
+def authors(request):
+    authors = Author.objects.all()
+    return render(request, 'authors.html', {'authors' : authors})
 
 def contact(request):
     if request.method == 'POST':

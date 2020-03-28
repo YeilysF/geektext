@@ -1,5 +1,21 @@
 {% extends "base.html" %}
+
+
 {% block content %}
-    <h1>Books Page</h1>
-    
-{% endblock content %}
+
+    <style>
+    ul.booklist{
+        margin-top:80px;
+        padding: 0;
+    }
+
+    </style>
+
+    {% for b in books %}
+
+         <ul class="booklist">
+             <li>  <a href="{% url 'book-detail' b.pk %}">{{ b.book_title}}</a></li>
+         </ul>
+
+    {% endfor %}
+{% endblock %}

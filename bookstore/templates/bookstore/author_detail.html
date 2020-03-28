@@ -5,13 +5,6 @@
 div.details {
   margin-top: 80px;
 }
-{# li{#}
-{#        color: #2196F3;#}
-{#    }#}
-{##}
-{#    ul li::before {#}
-{#  color: black;#}
-{#}#}
 </style>
 
     <div class = "details">
@@ -27,7 +20,7 @@ div.details {
     {% for book in author.book_set.all %}
 
          <ul>
-             <li>  <a href="{% url 'book-detail' book.pk %}">{{ book}}</a></li>
+             <li>  <a href="{% url 'book-detail' book.pk %}">{{book}}</a></li>
          </ul>
 
     {% endfor %}

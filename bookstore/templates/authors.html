@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+
+    <style>
+    ul{
+        margin-top: 80px;
+    }
+    </style>
+
+
+    {% for a in authors %}
+
+         <ul>
+             <li>  <a href="{% url 'author-detail' a.pk %}">{{ a.first_name}} {{ a.last_name}}</a></li>
+         </ul>
+
+    {% endfor %}
+{% endblock %}
