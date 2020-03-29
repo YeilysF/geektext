@@ -2,6 +2,7 @@
 <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.1/js/bootstrap.min.js"></script>
 <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+{% load bookstore_extras %}
 {% block content %}
     <h1>Browse & Sort Books</h1>
 
@@ -11,13 +12,13 @@
           border-collapse: collapse;
           width: 100%;
         }
-        
+
         td, th {
           border: 1px solid #dddddd;
           text-align: left;
           padding: 8px;
         }
-        
+
         tr:nth-child(even) {
           background-color: #dddddd;
         }
@@ -99,6 +100,14 @@
   background-color: #666;
   color: white;
 }
+
+.isDisabled {
+  color: currentColor;
+  cursor: not-allowed;
+  opacity: 0.5;
+  text-decoration: none;
+  pointer-events: none;
+}
 </style>
 
 
@@ -130,6 +139,19 @@
     function myFunction2() {
       document.getElementById("myDropdown2").classList.toggle("show");
     }
+    function wishlistFunction(event, element, id) {
+      document.getElementById("wishlistDropdown"+id).classList.toggle("show");
+    }
+    // function wishlistFunction(event, element, id) {
+    //   // console.log(element.closest('.wishlist-dropdown'));
+    //   // console.log($(element).closest('div').next().find('.wishlist-dropdown').classList);
+    //   $(element).parents('div').find('.wishlist-dropdown').toggleClass("show");
+
+    //   // $(element).closest('div').next().find('.wishlist-dropdown').toggleClass("show");
+
+    //   // element.closest( ".wishlist-dropdown" ).toggleClass( "show" );
+    //   // $(".wishlist-dropdown").classList.toggle("show");
+    // }
     // Close the dropdown if the user clicks outside of it
     window.onclick = function(event) {
       if (!event.target.matches('.dropbtn')) {
@@ -145,7 +167,7 @@
     }
     </script>
 
-    <table>    
+    <table>
     {% if books %}
     <tr>
         <th style="text-align:center">Cover</th>
@@ -163,7 +185,19 @@
     <td>{{ book.price }}</td>
         <td >
             <a class="btn btn-success" style="background-color: #428bca" href="{% url 'cart:add_cart' book.id %}">Add to Cart</a>
-            <a class="btn btn-danger" style="background-color: orangered" href="">Add to Wishlist</a>
+            <div class="dropdown">
+              <button  onclick="wishlistFunction(event,this, {{book.id}} )" class="btn btn-danger wishlist-dropbtn dropbtn"  style="background-color: orangered">Add to Wishlist</button>
+              <div id="wishlistDropdown{{book.id}}" class="dropdown-content wishlist-dropdown">
+                <!-- {% for wishlist in wishlists %} -->
+                  <!-- {% get_wishlist_books wishlist.id as books %} -->
+                  <!-- {% if books.count >= 2 %} -->
+                    <!-- <a href="?wishlist_selection={{ wishlist.id }}&book_id={{ book.id }}" class="isDisabled" title="Wishlist can Maximum contain 3 Books" >{{ wishlist.wishlist_name }}<span class="badge badge-danger">3 Books Allowed</span></a> -->
+                  <!-- {% else %} -->
+                    <a href="?wishlist_selection={{ wishlist.id }}&book_id={{ book.id }}">{{ wishlist.wishlist_name }}</a>
+                  <!-- {% endif %} -->
+                <!-- {% endfor %} -->
+              </div>
+            </div>
         </td>
     {% endfor %}
     </tr>

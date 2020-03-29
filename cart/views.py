@@ -6,7 +6,9 @@ from django.urls import reverse
 
 from bookstore.models import Book
 from cart.models import OrderItem, Order, Cart, SavedItem, CartItem
+from bookstore.models import Wishlist, WishlistBook
 from users.models import Profile
+from django.http import HttpResponse
 
 
 @login_required
@@ -31,6 +33,25 @@ def add_to_cart(request, book_id):
     except CartItem.DoesNotExist:
         cart_item = CartItem.objects.create(book=book, quantity=1, cart=cart)
         cart_item.save()
+    return redirect('cart:cart_page')
+
+@login_required
+def add_wishlist_to_cart(request, wishlist_id):
+    wishlist_books = WishlistBook.objects.select_related('wb_book').filter(wb_wishlist_id=wishlist_id)
+    for wishlist_book in wishlist_books:
+        book = Book.objects.get(id=wishlist_book.wb_book_id)
+        try:
+            cart = Cart.objects.get(cart_id=cart_start(request))
+        except Cart.DoesNotExist:
+            cart = Cart.objects.create(cart_id=cart_start(request))
+        cart.save(),
+        try:
+            cart_item = CartItem.objects.get(book=book, cart=cart)
+            cart_item.quantity += 1
+            cart_item.save()
+        except CartItem.DoesNotExist:
+            cart_item = CartItem.objects.create(book=book, quantity=1, cart=cart)
+            cart_item.save()
     return redirect('cart:cart_page')
 
 def remove_from_cart(request, book_id):

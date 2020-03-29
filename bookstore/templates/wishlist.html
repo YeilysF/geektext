@@ -1,50 +1,58 @@
 {% extends "base.html" %}
+{% load bookstore_extras %}
 {% block content %}
 
   <h1>Manage Your Wishlists</h1>
+  <small class="text-muted">
+    {% if my_wishlists.count >= 3 %}
+      <strong class="text-danger"><span class="fa fa-info-circle"></span> Maximum 3 Wishlist are allowed.</strong>
+    {% else %}
+      <a class="ml-2" href="{% url 'wishlist_add' %}">Create New Wishlist</a>
+    {% endif %}
+  </small>
 
   <br>
 
 <script src="https://use.fontawesome.com/c560c025cf.js"></script>
 
-  <div class="card" style="width: 40rem;">
-      <div class="card-body">
-        <h5 class="card-title">Wishlist 1 Name</h5>
-        <h6 href="#"class="card-subtitle mb-2 text-muted"></h6>
-        <p class="card-text">Wishlist is Currently Empty</p>
-        <a href="#" class="btn btn-warning"><i class="fa fa-angle-center"></i>Edit Wishlist Name</a>
-        <a href="{% url 'browse_sort' %}" class="btn btn-warning"><i class="fa fa-angle-center"></i>Add Book</a>
-        <a href="#" class="btn btn-secondary" style="background-color: #F3212D"><i class="fa fa-angle-center"></i>Delete</a>
-        <a href="#" class="btn btn-secondary" style="background-color: #2196F3"><i class="fa fa-angle-center"></i> Move to Cart</a>
-      </div>
-  </div>
+  {% for wishlist in my_wishlists %}
+    <div class="card" style="width: 40rem;">
+        <div class="card-body">
+          <h5 class="card-title">{{ wishlist.wishlist_name }}</h5>
+          <h6 href="#"class="card-subtitle mb-2 text-muted"></h6>
+          {% get_wishlist_books wishlist.id as books %}
+          {% if books %}
+            <p class="card-text text-info">Wishlist Books</p>
+            <ul>
+              {% for book in books %}
+                <li>
+                  {{book.wb_book.book_title}}
+                </li>
+                <a href="{% url 'wishlist_book_remove' book.id %}" class="text-danger"><i class="fa fa-angle-center"></i>(Remove From Wishlist)</a>
+                <ul>
+                  <li><b>Price: {{book.wb_book.price}}</b></li>
+                  <li>{{ book.wb_book.summary|slice:":100" }}</li>
+                </ul>
+              <br>
+              {% endfor %}
+            </ul>
+          {% else %}
+            <p class="card-text text-danger">Wishlist is Currently Empty</p>
+          {% endif %}
+          <br><br>
+          <a href="{% url 'wishlist_edit' wishlist.id %}" class="btn btn-warning"><i class="fa fa-angle-center"></i>Edit Wishlist Name</a>
+          <a href="{% url 'browse_sort' %}" class="btn btn-warning"><i class="fa fa-angle-center"></i>Add Book</a>
+          <a href="{% url 'wishlist_delete' wishlist.id %}" class="btn btn-secondary" style="background-color: #F3212D"><i class="fa fa-angle-center"></i>Delete</a>
+          {% if books %}
+            <a href="{% url 'cart:add_wishilist_cart' wishlist.id %}" class="btn btn-secondary" style="background-color: #2196F3"><i class="fa fa-angle-center"></i> Move to Cart</a>
+          {% else %}
+            <a href="javascript:void(0)" class="btn btn-secondary active" role="button" aria-pressed="true">Move to Cart</a>
+          {% endif %}
 
-  <br>
+        </div>
+    </div>
 
-  <div class="card" style="width: 40rem;">
-      <div class="card-body">
-        <h5 class="card-title">Wishlist 2 Name</h5>
-        <h6 href="#"class="card-subtitle mb-2 text-muted"></h6>
-        <p class="card-text">Wishlist is Currently Empty</p>
-        <a href="#" class="btn btn-warning"><i class="fa fa-angle-center"></i>Edit Wishlist Name</a>
-        <a href="{% url 'browse_sort' %}" class="btn btn-warning"><i class="fa fa-angle-center"></i>Add Book</a>
-        <a href="#" class="btn btn-secondary" style="background-color: #F3212D"><i class="fa fa-angle-center"></i>Delete</a>
-        <a href="#" class="btn btn-secondary" style="background-color: #2196F3"><i class="fa fa-angle-center"></i> Move to Cart</a>
-      </div>
-  </div>
-
-  <br>
-
-  <div class="card" style="width: 40rem;">
-      <div class="card-body">
-        <h5 class="card-title">Wishlist 3 Name</h5>
-        <h6 href="#"class="card-subtitle mb-2 text-muted"></h6>
-        <p class="card-text">Wishlist is Currently Empty</p>
-        <a href="#" class="btn btn-warning"><i class="fa fa-angle-center"></i>Edit Wishlist Name</a>
-        <a href="{% url 'browse_sort' %}" class="btn btn-warning"><i class="fa fa-angle-center"></i>Add Book</a>
-        <a href="#" class="btn btn-secondary" style="background-color: #F3212D"><i class="fa fa-angle-center"></i>Delete</a>
-        <a href="#" class="btn btn-secondary" style="background-color: #2196F3"><i class="fa fa-angle-center"></i> Move to Cart</a>
-      </div>
-  </div>
+    <br>
+  {% endfor %}
 
 {% endblock content %}
