@@ -18,7 +18,8 @@ review = [
 
 
 def index(request):
-    return render(request, 'index.html')
+    books = Book.objects.all()
+    return render(request, 'index.html', {'books' : books})
 
 
 def about(request):
