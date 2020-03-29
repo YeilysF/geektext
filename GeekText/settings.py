@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'cart.apps.CartConfig',
     'users.apps.UsersConfig',
     'crispy_forms',
+    'star_ratings',
 ]
 
 MIDDLEWARE = [
