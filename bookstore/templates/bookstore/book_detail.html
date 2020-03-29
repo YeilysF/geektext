@@ -8,9 +8,9 @@
 <script type="text/javascript" src="{% static 'star-ratings/js/dist/star-ratings.min.js' %}"></script>
 
     <style>
-div.details {
-  margin-top: 80px;
-}
+    .details{
+        margin-top:70px;
+    }
   .toplinks{
         color: #333333;
        float:right;
@@ -144,7 +144,7 @@ top: 0px;
         <a class="lightbox-close" href=""></a>
         </div>
     <a class="toplinks" href="{% url 'wishlist' %}">Wishlist <i class="fa fa-heart" aria-hidden="true"></i></a>
-    <a class="toplinks" href="{% url 'cart:cart_page' %}">Cart <i class="fa fa-shopping-cart" aria-hidden="true"></i></a>
+    <a class="toplinks" href="{% url 'cart:add_cart' book.id %}">Cart <i class="fa fa-shopping-cart" aria-hidden="true"></i></a>
 
     <p><strong>Title:</strong> {{ book.book_title }}</p>
     <p><strong>Author:</strong> <a href="{% url 'author-detail' book.author.pk %}">{{ book.author }}</a></p> <!-- author detail link not yet defined -->

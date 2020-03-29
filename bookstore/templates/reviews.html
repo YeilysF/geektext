@@ -1,14 +1,22 @@
 {% extends "base.html" %}
 {% block content %}
-    {% for review in reviews %}
-        <article class="media content-section">
+
+    <style>
+    .reviews{
+        margin-right: 100px;
+        margin-top: 20px;
+    }
+    </style>
+    <h2>All Comments :</h2>
+    {% for c in comments %}
+        <article class="reviews">
           <div class="media-body">
             <div class="article-metadata">
-              <a class="mr-2" href="#">{{ review.author }}</a>
-              <small class="text-muted">{{ review.date_reviewed }}</small>
+              <a class="mr-2" href="#">{{ c.profile }}</a>
+              <small class="text-muted">{{ c.created_on }}</small>
             </div>
-            <h2><a class="article-title" href="#">{{ review.title }}</a></h2>
-            <p class="article-content">{{ review.content }}</p>
+            <h2><a class="article-title" href="#">{{ c.book }}</a></h2>
+            <p class="article-content">{{ c.body }}</p>
           </div>
         </article>
     {% endfor %}

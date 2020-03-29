@@ -177,12 +177,12 @@
         <th style="text-align:center">Price</th>
     </tr>
     {% for book in books %}
-    <tr class="clickable text-center" onclick="window.location='{{ book.get_absolute_url }}'">
-    <td><img src="/media/{{ book.book_cover.url }}" width="200" height="280"/></td>
-    <td>{{ book.book_title }}</td>
-    <td>{{ book.author }}</td>
-    <td>{{ book.rating }}</td>
-    <td>{{ book.price }}</td>
+    <tr class="clickable text-center">
+    <td><img src="/media/{{ book.book_cover.url }}" onclick="window.location='{{ book.get_absolute_url }}'" width="200" height="280"/></td>
+    <td onclick="window.location='{{ book.get_absolute_url }}'">{{ book.book_title }}</td>
+    <td onclick="window.location='{{ book.get_absolute_url }}'">{{ book.author }}</td>
+    <td onclick="window.location='{{ book.get_absolute_url }}'">{{ book.rating }}</td>
+    <td onclick="window.location='{{ book.get_absolute_url }}'">{{ book.price }}</td>
         <td >
             <a class="btn btn-success" style="background-color: #428bca" href="{% url 'cart:add_cart' book.id %}">Add to Cart</a>
             <div class="dropdown">

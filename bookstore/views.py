@@ -14,15 +14,6 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models.functions import Lower
 from .forms import CommentForm
 
-review = [
-    {
-        'author': 'Eitan Flor',
-        'title': 'Review for Harry Potter',
-        'content': 'Book Review Details can be here',
-        'date_posted': 'January 1, 2020'
-    },
-]
-
 
 def index(request):
     books = Book.objects.all()
@@ -60,10 +51,8 @@ def contact(request):
 
 
 def reviews(request):
-    context = {
-        'reviews': review
-    }
-    return render(request, 'reviews.html', context)
+    comments = Comment.objects.all()
+    return render(request, 'reviews.html', {'comments': comments})
 
 
 def wishlist(request):

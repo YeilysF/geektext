@@ -3,11 +3,6 @@
 {% block content %}
   <h2>Contact Us</h2>
 
-    <style>
-            body, html{
-        margin-top: 70px;
-    }
-    </style>
   <form align='left' method="post">
     {% csrf_token %}
     {{ form|crispy }}
