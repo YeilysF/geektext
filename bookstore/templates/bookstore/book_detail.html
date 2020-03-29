@@ -1,6 +1,11 @@
 {% extends "base.html" %}
 
 {% block content %}
+{% load crispy_forms_tags %}
+
+{% load static %}
+<link rel="stylesheet" href="{% static 'star-ratings/css/star-ratings.css' %}">
+<script type="text/javascript" src="{% static 'star-ratings/js/dist/star-ratings.min.js' %}"></script>
 
     <style>
 div.details {
@@ -132,7 +137,6 @@ margin-left: 40px;
 top: 0px;
 }
 
-
 </style>
     <div class = "details">
     <a class="lighbox" href="#cover"><img src="/media/{{ book.book_cover.url }}" width="200" height="280"/></a>
@@ -148,11 +152,56 @@ top: 0px;
     <p><strong>Summary:</strong> {{ book.summary }}</p>
     <p><strong>ISBN:</strong> {{ book.isbn }}</p>
     <p><strong>Genre:</strong> {{ book.genre}}</p>
-    <p><strong>Rating:</strong> {{ book.rating}}</p>
         <p><strong>Publisher: </strong> {{book.publisher}} <strong>Located in: </strong> {{ book.publisher.location }}</p>
     </div>
 
+    <hr>
 
-</button>
+    {% load ratings %}
+    {% if owns_book %}
+    {% ratings book %}
+    {% else %}
+    {% ratings book read_only %}
+    {% endif %}
+
+    <div class="container">
+    	<div class="row">
+    		<div class="col-md-12 card mb-4  mt-3 ">
+    			<div class="card-body">
+    				<h2> Comments</h2>
+    				<!-- Show comments -->
+    				{% for comment in comments %}
+    				<div class="comments" style="padding: 10px;">
+    					<p class="font-weight-bold">
+    						{% if comment.anonymous %} Anonymous
+    						{% else %} {{ comment.profile }} {% endif %}
+    						<span class=" text-muted font-weight-normal">
+    							{{ comment.created_on }}
+    						</span>
+    					</p>
+    					{{ comment.body | linebreaks }}
+    				</div>
+    				{% endfor %}
+    				<hr>
+    				<!-- Post new comment -->
+    				<div class="comments">
+    					{% if new_comment %}
+    					<div class="alert alert-success" role="alert"> Your comment has been successfully posted. </div>
+    					{% else %}
+                        {% if owns_book is not True %}
+                        <div class="alert alert-danger" role="alert"> You cannot post a comment unless you own this book. </div>
+                        {% else %}
+    					<h3>Leave a comment</h3>
+    					<form method="post" style="margin-top: 1.3em;">
+    						{{ comment_form | crispy }}
+    						{% csrf_token %}
+    						<button type="submit" class="btn btn-primary btn-lg" style="background-color: #4CAF50">Post Comment</button>
+    					</form>
+    					{% endif %}
+                        {% endif %}
+    				</div>
+    			</div>
+    		</div>
+    	</div>
 {% endblock %}
 

@@ -1,9 +1,11 @@
 from django.shortcuts import render, get_object_or_404
-from .models import ContactForm, Book, Author, Genre
+from .models import ContactForm, Book, Author, Genre, Comment
+from users.models import Profile
 from django.http import HttpResponse, Http404
 from django.views import generic
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models.functions import Lower
+from .forms import CommentForm
 
 review = [
     {
@@ -22,13 +24,16 @@ def index(request):
 def about(request):
     return render(request, 'about.html', {'title': 'About'})
 
+
 def books(request):
     books = Book.objects.all()
-    return render(request, 'books.html', {'books' : books})
+    return render(request, 'books.html', {'books': books})
+
 
 def authors(request):
     authors = Author.objects.all()
-    return render(request, 'authors.html', {'authors' : authors})
+    return render(request, 'authors.html', {'authors': authors})
+
 
 def contact(request):
     if request.method == 'POST':
@@ -103,16 +108,41 @@ def browse_sort_view(request):
     }
     return render(request, 'browse_sort.html', context=context)
 
-class BookDetailView(generic.DetailView):
-    model = Book
 
-    def book_detail_view(request, primary_key):
-        try:
-            book = Book.objects.get(pk=primary_key)
-        except Book.DoesNotExist:
-            raise Http404('Book does not exist')
+def book_detail_view(request, pk):
+    try:
+        book = Book.objects.get(pk=pk)
+    except Book.DoesNotExist:
+        raise Http404('Book does not exist')
 
-        return render(request, 'bookstore/book_detail.html', context={'book': book})
+    comments_query = Comment.objects.filter(book=pk)
+
+    user_profile = Profile.objects.get(user=request.user)
+    owns_book = False
+    if user_profile.books.filter(pk=pk):
+        owns_book = True
+
+    # Comment posted
+    new_comment = None
+    if request.method == 'POST':
+        comment_form = CommentForm(data=request.POST)
+        if comment_form.is_valid():
+            new_comment = comment_form.save(commit=False)
+            new_comment.book = book
+            new_comment.profile = request.user
+            new_comment.save()
+    else:
+        comment_form = CommentForm()
+
+    context = {
+        'book': book,
+        'comments': comments_query,
+        'new_comment': new_comment,
+        'comment_form': comment_form,
+        'owns_book': owns_book
+    }
+    return render(request, 'bookstore/book_detail.html', context=context)
+
 
 class AuthorDetailView(generic.DetailView):
     model = Author
