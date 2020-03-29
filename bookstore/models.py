@@ -85,11 +85,25 @@ class ContactForm(forms.Form):
     message = forms.CharField(widget=forms.Textarea)
 
 
+# Comment model
+class Comment(models.Model):
+    book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='comments')
+    profile = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments')
+    anonymous = models.BooleanField(default=False)
+    body = models.TextField()
+    created_on = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['created_on']
+
+    def __str__(self):
+        return 'Comment {} by {}'.format(self.body, self.profile)
+
 # Wishlist
 class Wishlist(models.Model):
     wishlist_name = models.CharField(max_length=100)
     wishlist_user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
-    
+
     def __str__(self):
         return self.wishlist_name
 
@@ -100,7 +114,7 @@ class Wishlist(models.Model):
 # Wishlist
 class WishlistBook(models.Model):
     wb_book = models.ForeignKey('Book', default=1, on_delete=models.CASCADE)
-    wb_wishlist = models.ForeignKey('Wishlist', default=1, on_delete=models.CASCADE) 
+    wb_wishlist = models.ForeignKey('Wishlist', default=1, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.id

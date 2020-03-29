@@ -177,7 +177,7 @@
         <th style="text-align:center">Price</th>
     </tr>
     {% for book in books %}
-    <tr>
+    <tr class="clickable text-center" onclick="window.location='{{ book.get_absolute_url }}'">
     <td><img src="/media/{{ book.book_cover.url }}" width="200" height="280"/></td>
     <td>{{ book.book_title }}</td>
     <td>{{ book.author }}</td>

@@ -1,3 +1,7 @@
+from django.shortcuts import render, get_object_or_404
+from .models import ContactForm, Book, Author, Genre, Comment
+from users.models import Profile
+from django.http import HttpResponse, Http404
 from django.core.mail import send_mail
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
@@ -8,6 +12,7 @@ from django.http import HttpResponse
 from django.views import generic
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models.functions import Lower
+from .forms import CommentForm
 
 review = [
     {
@@ -20,10 +25,8 @@ review = [
 
 
 def index(request):
-    model = Book
-    queryset = model.objects.all()
-    context = {'my_book_list': queryset}
-    return render(request, 'index.html', context=context)
+    books = Book.objects.all()
+    return render(request, 'index.html', {'books' : books})
 
 
 def about(request):
@@ -31,7 +34,13 @@ def about(request):
 
 
 def books(request):
-    return render(request, 'books.html', {'title': 'Books'})
+    books = Book.objects.all()
+    return render(request, 'books.html', {'books': books})
+
+
+def authors(request):
+    authors = Author.objects.all()
+    return render(request, 'authors.html', {'authors': authors})
 
 
 def contact(request):
@@ -212,3 +221,50 @@ def browse_sort_view(request):
         'wishlists': wishlists
     }
     return render(request, 'browse_sort.html', context=context)
+
+
+def book_detail_view(request, pk):
+    try:
+        book = Book.objects.get(pk=pk)
+    except Book.DoesNotExist:
+        raise Http404('Book does not exist')
+
+    comments_query = Comment.objects.filter(book=pk)
+
+    user_profile = Profile.objects.get(user=request.user)
+    owns_book = False
+    if user_profile.books.filter(pk=pk):
+        owns_book = True
+
+    # Comment posted
+    new_comment = None
+    if request.method == 'POST':
+        comment_form = CommentForm(data=request.POST)
+        if comment_form.is_valid():
+            new_comment = comment_form.save(commit=False)
+            new_comment.book = book
+            new_comment.profile = request.user
+            new_comment.save()
+    else:
+        comment_form = CommentForm()
+
+    context = {
+        'book': book,
+        'comments': comments_query,
+        'new_comment': new_comment,
+        'comment_form': comment_form,
+        'owns_book': owns_book
+    }
+    return render(request, 'bookstore/book_detail.html', context=context)
+
+
+class AuthorDetailView(generic.DetailView):
+    model = Author
+
+    def author_detail_view(request, primary_key):
+        try:
+            author = Author.objects.get(pk=primary_key)
+        except Author.DoesNotExist:
+            raise Http404('Author does not exist')
+
+        return render(request, 'bookstore/author_detail.html', context={'author': author})

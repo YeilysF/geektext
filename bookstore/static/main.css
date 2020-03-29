@@ -28,12 +28,21 @@ ul {
   font-weight: 500;
 }
 
+
 .content-section {
-  background: #ffffff;
-  padding: 10px 20px;
   border: 1px solid #dddddd;
   border-radius: 3px;
   margin-bottom: 20px;
+  margin-left: 800px;
+  width: 350px;
+  position: fixed;
+  z-index: 1;
+  top: 80px;
+  border-right: 10px;
+  background: #ffffff;
+  overflow-x: hidden;
+  padding: 8px 0;
+  text-align: center;
 }
 
 .article-title {
