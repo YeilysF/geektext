@@ -36,7 +36,8 @@
 <div class="row">
     <div class="container">
         <div class="card-header bg-dark text-light">
-            <h3><i class="fa fa-shopping-cart" style="color: white"> Shopping cart </i></h3></div>
+            <h3><i class="fa fa-shopping-cart" style="color: white"> Shopping cart </i></h3>
+        </div>
         <div id=content class="bg-white rounded shadow-sm mb-5">
             {% if not cart_items %}
             <div class="No-items-in-cart text-center">
@@ -46,7 +47,7 @@
                 <p> Please click <a href="{% url 'browse_sort' %}">here</a> to continue shopping.
                 </p>
             </div>
-            {% endif %} {% for cart_item in cart_items %}
+            {% else %} {% for cart_item in cart_items %}
             <div class="table-responsive">
                 <table class="table">
                     <thead>
@@ -114,6 +115,10 @@
                 </table>
             </div>
             {% endfor %}
+            <div style="text-align: right">
+                <a href="{% url 'cart:clear_cart' %}"><strong style="color: #333333">x Clear</strong></a>
+            </div>
+            {% endif %}
         </div>
     </div>
 </div>
@@ -210,7 +215,7 @@
             </div>
             {% endfor %}
                 <div style="text-align: right">
-                    <a href="{% url 'cart:clear_save' %}" style="background-color: crimson; color: white" class="btn rounded-pill">Clear Saved Items</a>
+                    <a href="{% url 'cart:clear_save' %}"><strong style="color: #333333">x Clear</strong></a>
                 </div>
             {% endif %}
         </div>

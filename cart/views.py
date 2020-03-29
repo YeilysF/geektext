@@ -54,6 +54,12 @@ def remove_full_item(request, book_id):
 
     return redirect('cart:cart_page')
 
+def clear_cart(request):
+    cart_item = CartItem.objects.all()
+    for item in cart_item:
+        item.delete()
+    return redirect('cart:cart_page')
+
 @login_required
 def save_for_later(request, book_id):
     book = Book.objects.get(id=book_id)
