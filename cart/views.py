@@ -48,7 +48,8 @@ def remove_from_cart(request, book_id):
 @login_required
 def remove_full_item(request, book_id):
     book = Book.objects.get(id=book_id)
-    cart_item = CartItem.objects.get(book=book)
+    cart = Cart.objects.get(cart_id=cart_start(request))
+    cart_item = CartItem.objects.get(book=book,cart=cart)
     cart_item.delete()
 
     return redirect('cart:cart_page')
@@ -61,9 +62,9 @@ def save_for_later(request, book_id):
     if not SavedItem.objects.filter(book=book).exists():
         save_book.save()
     else:
-        messages.info(request, "Item already saved")
+        messages.info(request, "Item is already saved")
 
-    remove_from_cart(request,book_id)
+    remove_full_item(request,book_id)
 
     return redirect('cart:cart_page')
 
