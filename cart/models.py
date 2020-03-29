@@ -85,6 +85,6 @@ class SavedItem(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
 
     def __str__(self):
-        return '%s' % self.book.book_title
+        return self.book
 
 
