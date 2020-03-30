@@ -5,6 +5,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 
 from bookstore.models import Book
+from bookstore.views import wishlist_add
 from cart.models import OrderItem, Order, Cart, SavedItem, CartItem
 from bookstore.models import Wishlist, WishlistBook
 from users.models import Profile
@@ -40,18 +41,7 @@ def add_wishlist_to_cart(request, wishlist_id):
     wishlist_books = WishlistBook.objects.select_related('wb_book').filter(wb_wishlist_id=wishlist_id)
     for wishlist_book in wishlist_books:
         book = Book.objects.get(id=wishlist_book.wb_book_id)
-        try:
-            cart = Cart.objects.get(cart_id=cart_start(request))
-        except Cart.DoesNotExist:
-            cart = Cart.objects.create(cart_id=cart_start(request))
-        cart.save(),
-        try:
-            cart_item = CartItem.objects.get(book=book, cart=cart)
-            cart_item.quantity += 1
-            cart_item.save()
-        except CartItem.DoesNotExist:
-            cart_item = CartItem.objects.create(book=book, quantity=1, cart=cart)
-            cart_item.save()
+        add_to_cart(request, book.id)
     return redirect('cart:cart_page')
 
 @login_required
@@ -91,7 +81,7 @@ def save_for_later(request, book_id):
     else:
         messages.info(request, "Item is already saved")
 
-    remove_full_item(request,book_id)
+    remove_full_item(request, book_id)
 
     return redirect('cart:cart_page')
 
@@ -108,7 +98,6 @@ def move_to_cart(request, item_id):
     book = saved_book.book
 
     add_to_cart(request, book.id)
-
     saved_book.delete()
 
     return redirect('cart:cart_page')
@@ -120,18 +109,17 @@ def clear(request):
     return redirect('cart:cart_page')
 
 # cart details
-def cart_page(request, total=0, counter=0, cart_items=None):
+def cart_page(request, total=0, counter=0, cart_items=None, saved_books=None):
     try:
         cart = Cart.objects.get(cart_id=cart_start(request))
         cart_items = CartItem.objects.filter(cart=cart, active=True)
         saved_books = SavedItem.objects.all()
         for cart_item in cart_items:
             total += (cart_item.book.price * cart_item.quantity)
-            counter += cart_item.quantity
     except ObjectDoesNotExist:
         pass
 
-    return render(request, 'cart.html', dict(total=total, counter=counter, cart_items=cart_items))
+    return render(request, 'cart.html', dict(total=total, counter=counter, cart_items=cart_items, saved_books=saved_books))
 
 def checkout_home(request):
     return render(request, "checkout.html")
