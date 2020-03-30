@@ -133,6 +133,9 @@ def cart_page(request, total=0, counter=0, cart_items=None):
 
     return render(request, 'cart.html', dict(total=total, counter=counter, cart_items=cart_items))
 
+def checkout_home(request):
+    return render(request, "checkout.html")
+
 def cart_checkout(request):
     cart = Cart.objects.get(cart_id=cart_start(request))
     cart_items = CartItem.objects.filter(cart=cart, active=True)
