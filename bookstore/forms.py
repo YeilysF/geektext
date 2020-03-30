@@ -9,13 +9,10 @@ class NewWishlistForm(forms.ModelForm):
         model = Wishlist
         fields = ['wishlist_name']
 
-
 class UpdateWishlistForm(forms.ModelForm):
     class Meta:
         model = Wishlist
         fields = ['wishlist_name']
-
-
 
 class CommentForm(forms.ModelForm):
     class Meta:

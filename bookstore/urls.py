@@ -18,4 +18,5 @@ urlpatterns = [
     path('wishlist_edit/<int:wishlist_id>', views.wishlist_edit, name='wishlist_edit'),
     path('wishlist_delete/<int:wishlist_id>', views.wishlist_delete, name='wishlist_delete'),
     path('wishlist_book_remove/<int:wishlist_book_id>', views.wishlist_book_remove, name='wishlist_book_remove'),
+    path('wishlist_book_transfer/<int:wishlist_book_id>', views.wishlist_book_transfer, name='wishlist_book_transfer'),
 ]

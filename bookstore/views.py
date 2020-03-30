@@ -124,6 +124,26 @@ def wishlist_book_remove(request, wishlist_book_id):
         messages.success(request, f'Book removed from Wishlist successfully!')
         return redirect('wishlist')
 
+@login_required
+def wishlist_book_transfer(request, wishlist_book_id):
+    if request.method == 'POST':
+        book_wishlist_id = request.POST.get('book_wishlist_id')
+        book_wishlist_transfer = request.POST.get('book_wishlist_transfer')
+        wishlist_book = get_object_or_404(WishlistBook, id=book_wishlist_id)
+        wishlist_book.wb_wishlist_id = book_wishlist_transfer
+        wishlist_book.save()
+        messages.success(request, f'Wishlist transfer successfully!')
+        return redirect('wishlist')
+    else:
+        wishlist_book = get_object_or_404(WishlistBook, id=wishlist_book_id)
+    wishlists = Wishlist.objects.filter(wishlist_user=request.user)
+
+    context = {
+        'wishlist_book': wishlist_book,
+        'wishlists': wishlists,
+    }
+
+    return render(request, 'wishlist_book_transfer.html', context)
 
 
 @login_required
