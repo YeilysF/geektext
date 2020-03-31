@@ -12,7 +12,6 @@ class Cart(models.Model):
     class Meta:
         db_table = 'Cart'
         ordering = ['created_time']
-        managed = False
 
     def __str__(self):
         return self.cart_id
@@ -32,7 +31,7 @@ class CartItem(models.Model):
 
     class Meta:
         db_table = 'CartItem'
-        managed = False
+
     def sub_total(self):
         return self.book.price * self.quantity
 
@@ -86,4 +85,6 @@ class SavedItem(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
 
     def __str__(self):
-        return '%s' % self.book.book_title
+        return self.book
+
+

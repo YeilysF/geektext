@@ -1,4 +1,6 @@
 from django.shortcuts import render, get_object_or_404
+
+from users.forms import UpdateUserForm, UpdateProfileForm
 from .models import ContactForm, Book, Author, Genre, Comment
 from users.models import Profile
 from django.http import HttpResponse, Http404
