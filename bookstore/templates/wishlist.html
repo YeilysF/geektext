@@ -29,6 +29,7 @@
                   {{book.wb_book.book_title}}
                 </li>
                 <a href="{% url 'wishlist_book_remove' book.id %}" class="text-danger"><i class="fa fa-angle-center"></i>(Remove From Wishlist)</a>
+                <a href="{% url 'wishlist_book_transfer' book.id %}" class="text-primary"><i class="fa fa-angle-center"></i>(Transfer to another Wishlist)</a>
                 <ul>
                   <li><b>Price: {{book.wb_book.price}}</b></li>
                   <li>{{ book.wb_book.summary|slice:":100" }}</li>

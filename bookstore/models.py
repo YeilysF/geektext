@@ -75,8 +75,6 @@ class ContactForm(forms.Form):
     email = forms.EmailField()
     message = forms.CharField(widget=forms.Textarea)
 
-
-# Comment model
 class Comment(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='comments')
     profile = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments')
