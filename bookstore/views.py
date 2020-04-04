@@ -19,7 +19,7 @@ from .forms import CommentForm
 
 def index(request):
     books = Book.objects.all()
-    return render(request, 'index.html', {'books' : books})
+    return render(request, 'index.html', {'books': books})
 
 
 def about(request):
@@ -108,7 +108,6 @@ def wishlist_edit(request, wishlist_id):
     return render(request, 'wishlist_edit.html', context)
 
 
-
 @login_required
 def wishlist_delete(request, wishlist_id):
     if request.method == 'GET':
@@ -125,6 +124,7 @@ def wishlist_book_remove(request, wishlist_book_id):
         wishlist_book.delete()
         messages.success(request, f'Book removed from Wishlist successfully!')
         return redirect('wishlist')
+
 
 @login_required
 def wishlist_book_transfer(request, wishlist_book_id):
@@ -168,7 +168,6 @@ def profile(request):
     }
 
     return render(request, 'profile.html', context)
-
 
 
 def browse_sort_view(request):
