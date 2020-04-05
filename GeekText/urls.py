@@ -23,6 +23,8 @@ from django.views.generic import RedirectView
 from users import views as user_view
 from cart import views as cart_view
 from bookstore.views import browse_sort_view
+from django.conf.urls import url
+from users import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),

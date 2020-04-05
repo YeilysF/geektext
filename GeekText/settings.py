@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'bookstore.apps.BookstoreConfig',
     'cart.apps.CartConfig',
     'users.apps.UsersConfig',
+    'django_countries',
     'crispy_forms',
     'star_ratings',
 ]
