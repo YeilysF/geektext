@@ -18,7 +18,7 @@ class Profile(models.Model):
     zipcode = models.CharField('ZIP code', max_length=16, default='', null=True, blank=True)
     city = models.CharField('City', max_length=100, default='', null=True, blank=True)
     state = models.CharField('State', max_length=100, default='', null=True, blank=True)
-    country = CountryField(blank_label='(select country)', null=True)
+    country = CountryField(blank_label='(select country)', null=True, blank=True)
 
     # books = models.ManyToManyField(Book, blank=True)
 
