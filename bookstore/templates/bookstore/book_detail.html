@@ -188,7 +188,7 @@ top: 0px;
     					<div class="alert alert-success" role="alert"> Your comment has been successfully posted. </div>
     					{% else %}
                         {% if owns_book is not True %}
-                        <div class="alert alert-danger" role="alert"> You cannot post a comment unless you own this book. </div>
+                        <div class="alert alert-danger" role="alert"> You cannot post a comment unless you own this book or are not logged in. </div>
                         {% else %}
     					<h3>Leave a comment</h3>
     					<form method="post" style="margin-top: 1.3em;">

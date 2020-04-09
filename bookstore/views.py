@@ -241,22 +241,32 @@ def book_detail_view(request, pk):
 
     comments_query = Comment.objects.filter(book=pk)
 
-    user_profile = Profile.objects.get(user=request.user)
-    owns_book = False
-    if user_profile.books.filter(pk=pk):
-        owns_book = True
+    if request.user.is_authenticated:
+        user_profile = Profile.objects.get(user=request.user)
+        owns_book = False
+        if user_profile.books.filter(pk=pk):
+            owns_book = True
 
-    # Comment posted
-    new_comment = None
-    if request.method == 'POST':
+        # Comment posted
+        new_comment = None
         comment_form = CommentForm(data=request.POST)
-        if comment_form.is_valid():
-            new_comment = comment_form.save(commit=False)
-            new_comment.book = book
-            new_comment.profile = request.user
-            new_comment.save()
+        if request.method == 'POST':
+            if comment_form.is_valid():
+                new_comment = comment_form.save(commit=False)
+                new_comment.book = book
+                new_comment.profile = request.user
+                new_comment.save()
+        else:
+            comment_form = CommentForm()
     else:
-        comment_form = CommentForm()
+        owns_book = False
+        new_comment = None
+        comment_form = CommentForm(data=request.POST)
+        if request.method == 'POST':
+            if comment_form.is_valid():
+                new_comment = comment_form.save(commit=False)
+                new_comment.book = book
+                new_comment.save()
 
     context = {
         'book': book,
