@@ -18,6 +18,7 @@ urlpatterns = [
     path('delete/<int:item_id>/', views.remove_from_saved, name='remove_save'),
     path('move/<int:item_id>/', views.move_to_cart, name='move_save'),
     path('clear/', views.clear, name='clear_save'),
+    path('count/', views.count, name='cart_count'),
 
 
 

@@ -27,16 +27,24 @@
             max-height: 800px;
             overflow: scroll;
         }
+
+        #summary:hover {
+            cursor: pointer;
+            color: #2196F3
+        }
+
+
     </style>
 </head>
 
-{% extends 'base.html' %} {% block content %}
+{% extends 'base.html' %}
+{% block content %}
 
 <!-- Shopping cart table -->
 <div class="row">
     <div class="container">
         <div class="card-header bg-dark text-light">
-            <h3><i class="fa fa-shopping-cart" style="color: white"> Shopping cart </i></h3>
+            <h3><i class="fa fa-shopping-cart" style="color: white"> Shopping cart ({{ item_count }}) </i></h3>
         </div>
         <div id=content class="bg-white rounded shadow-sm mb-5">
             {% if not cart_items %}
@@ -91,7 +99,7 @@
                                             <i class="fas fa-minus-circle icon"></i></a>
                                     </button>
 
-                                    <input type="submit" style="width: 35px; height: 35px" class="form-control" value="{{ cart_item.quantity }}">
+                                    <input type="submit" style="width: 40px; height: 35px" class="form-control" value="{{ cart_item.quantity }}">
 
                                     <button>
                                         <a style="color: darkslategrey" class="button" id="plus-btn" href="{% url 'cart:add_cart' cart_item.book.id %}">
@@ -106,9 +114,6 @@
                                 <br>
                                 <br>
                                 <a href="{% url 'cart:save_item' cart_item.book.id %}" class="text-dark"><i class="far fa-bookmark"></i> Save for Later</a>
-                                <br>
-                                <br>
-                                <a href="#" class="text-dark"><i class="far fa-heart"></i> Save to Wishlist</a>
                             </td>
                         </tr>
                     </tbody>
@@ -130,27 +135,35 @@
         <div class=" col-lg-6">
             <div class="bg-dark rounded-pill px-4 py-3 text-uppercase font-weight-bold text-light">Coupon code</div>
             <div class="p-4">
+                {% if not cart_items %}
+                <p class="font-italic mb-4">Please add items to the cart</p>
+                {% else %}
                 <p class="font-italic mb-4">If you have a coupon code, please enter it here</p>
-                <div class="input-group mb-4 border rounded-pill p-2">
-                    <input type="text" placeholder="Apply coupon" aria-describedby="button-add" class="form-control border-0">
-                    <div class="input-group-append border-0">
-                        <button id="button-add" type="button" class="btn px-4 rounded-pill" style="background-color: hotpink; color: white"><i class="fa fa-gift mr-2"></i>
-                            <a href=""></a> Apply </button>
-                    </div>
-                </div>
+                 <form action="" method="post">{% csrf_token %}
+                     {{ coupon_input }}
+                        <div class="input-group-append border-0">
+                            <button type="submit" class="btn px-4 rounded-pill" style="background-color: hotpink; color: white; position: absolute; right: 65px;"><i class="fa fa-gift mr-2"></i>Apply</button>
+                        </div>
+                 </form>
+                {% endif %}
             </div>
         </div>
         <div class="col-lg-6">
             <div class="bg-dark rounded-pill px-4 py-3 text-uppercase font-weight-bold text-light"> Order Summary</div>
             <div class="p-4">
-                <p class="font-italic mb-4">Please review your shopping cart items before proceeding with the order payment.</p>
+                <p class="font-italic mb-4">Please review your shopping cart items before proceeding to the next page.</p>
                 <ul class="list-unstyled mb-4">
-                    <li class="d-flex justify-content-between py-3 border-bottom"><strong class="text-muted">Order Subtotal </strong><strong>${{ total }}</strong></li>
-                    <li class="d-flex justify-content-between py-3 border-bottom"><strong class="text-muted">Shipping and handling</strong><strong>$0.00</strong></li>
-                    <li class="d-flex justify-content-between py-3 border-bottom"><strong class="text-muted">Tax</strong><strong>$0.00</strong></li>
-                    <li class="d-flex justify-content-between py-3 border-bottom"><strong class="text-muted">Total</strong>
-                        <h5 class="font-weight-bold">${{ total }}</h5>
-                    </li>
+                    <li class="d-flex justify-content-between py-3 border-bottom"><strong class="text-muted">Order Subtotal </strong><strong>${{ subtotal | floatformat:2 }}</strong></li>
+                    <li class="d-flex justify-content-between py-3 border-bottom"><strong class="text-muted">Shipping and handling</strong><strong>FREE</strong></li>
+                    <li class="d-flex justify-content-between py-3 border-bottom"><strong class="text-muted">Tax</strong><strong> ${{ tax_rate | floatformat:2 }}</strong></li>
+                     {% if total_before_discount != total %}
+                        <div style="color: red ;text-align: right"> - ${{ discount|floatformat:"2" }}</div>
+                        <li id="total" class="d-flex justify-content-between py-3 border-bottom"><strong class="text-muted">Total</strong>
+                        <h5 class="font-weight-bold">${{ total | floatformat:2}}</h5></li>
+                     {% else %}
+                         <li id="total" class="d-flex justify-content-between py-3 border-bottom"><strong class="text-muted">Total</strong>
+                        <h5 class="font-weight-bold">${{ total | floatformat:2}}</h5></li>
+                    {% endif %}
                     {% if not cart_items %}
                 </ul><a style="background-color: #428bca; color: white;" class="btn rounded-pill py-2 btn-block disabled"> Proceed to checkout</a> {% else %}
                 </ul><a href="{% url 'cart:checkout' %}" style="background-color: #428bca; color: white" class="btn rounded-pill py-2 btn-block"> Proceed to checkout</a> {% endif %}
@@ -164,65 +177,67 @@
 <div class="row">
     <div class="container">
         <div class="card-header bg-dark text-light">
-                <h3><i class="far fa-bookmark" style="color: white"> Saved For Later </i></h3></div>
-        <div id="content2" class="bg-white rounded shadow-sm mb-5">
-            {% if not saved_books %}
-            <br>
-            <div style="height: 100px" class="No-saved-books text-center">
-                <br> There are no saved items
-                <br>
-                <br>
-            </div>
-            {% else%} {% for saved_item in saved_books %}
-            <div class="table-responsive">
-                <table class="table">
-                    <thead>
-                        <tr style="text-decoration: underline">
-                            <th scope="col" class="border-0 bg-light">
-                                <div class="p-2 px-3 text-uppercase">Book</div>
-                            </th>
-                            <th scope="col" class="border-0 bg-light">
-                                <div class="py-2 text-uppercase text-center">Price</div>
-                            </th>
-                            <th scope="col" class="border-0 bg-light">
-                                <div class="py-2 text-uppercase text-center">Actions</div>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <th scope="row" class="border-0">
-                                <div style="text-align: center" class="p-2 ">
-                                    <div href="cart_item.book.get_absolute_url"><img src="/media/{{ saved_item.book.book_cover.url }}" width="100" alt="" class=".float-left rounded custom_image"></div>
-                                    <br>
-                                    <div class="ml-2 d-inline-block align-middle">
-                                        <a class="mb-0"> <a href="#" class="text-dark d-inline-block align-middle">{{ saved_item.book.book_title }}</a></a>
-                                        <span class="text-muted font-weight-normal font-italic d-block">by <br>{{ saved_item.book.author }}</span>
-                                        <span class="text-muted font-weight-normal font-italic d-block">Rating: {{ saved_item.book.rating }}</span>
-                                    </div>
-                                </div>
-                            </th>
-                            <td class="border-0 align-middle text-center"><strong>${{ saved_item.book.price }}</strong></td>
-                            <td class="border-0 align-middle text-center">
-                                <a href="{% url 'cart:remove_save' saved_item.id %}" class="text-dark"><i class="fa fa-trash"></i> Remove</a>
-                                <br>
-                                <br>
-                                <a href="{% url 'cart:move_save' saved_item.id %}" class="text-dark"><i class="fa fa-shopping-cart"></i> Move to Cart</a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            {% endfor %}
-                <div style="text-align: right">
-                    <a href="{% url 'cart:clear_save' %}"><strong style="color: #333333">x Clear</strong></a>
+                <h3><i class="far fa-bookmark" style="color: white"> Saved For Later ({{ saved_count }})</i></h3></div>
+        <details>
+            <summary id="summary">See All ({{ saved_count }})</summary>
+                <div id="content2" class="bg-white rounded shadow-sm mb-5">
+                    {% if not saved_books %}
+                    <br>
+                    <div style="height: 100px" class="No-saved-books text-center">
+                        <br> There are no saved items
+                        <br>
+                        <br>
+                    </div>
+                    {% else%} {% for saved_item in saved_books %}
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr style="text-decoration: underline">
+                                    <th scope="col" class="border-0 bg-light">
+                                        <div class="p-2 px-3 text-uppercase">Book</div>
+                                    </th>
+                                    <th scope="col" class="border-0 bg-light">
+                                        <div class="py-2 text-uppercase text-center">Price</div>
+                                    </th>
+                                    <th scope="col" class="border-0 bg-light">
+                                        <div class="py-2 text-uppercase text-center">Actions</div>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th scope="row" class="border-0">
+                                        <div style="text-align: center" class="p-2 ">
+                                            <div href="cart_item.book.get_absolute_url"><img src="/media/{{ saved_item.book.book_cover.url }}" width="100" alt="" class=".float-left rounded custom_image"></div>
+                                            <br>
+                                            <div class="ml-2 d-inline-block align-middle">
+                                                <a class="mb-0"> <a href="#" class="text-dark d-inline-block align-middle">{{ saved_item.book.book_title }}</a></a>
+                                                <span class="text-muted font-weight-normal font-italic d-block">by <br>{{ saved_item.book.author }}</span>
+                                                <span class="text-muted font-weight-normal font-italic d-block">Rating: {{ saved_item.book.rating }}</span>
+                                            </div>
+                                        </div>
+                                    </th>
+                                    <td class="border-0 align-middle text-center"><strong>${{ saved_item.book.price }}</strong></td>
+                                    <td class="border-0 align-middle text-center">
+                                        <a href="{% url 'cart:remove_save' saved_item.id %}" class="text-dark"><i class="fa fa-trash"></i> Remove</a>
+                                        <br>
+                                        <br>
+                                        <a href="{% url 'cart:move_save' saved_item.id %}" class="text-dark"><i class="fa fa-shopping-cart"></i> Move to Cart</a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    {% endfor %}
+                        <div style="text-align: right">
+                            <a href="{% url 'cart:clear_save' %}"><strong style="color: #333333">x Clear</strong></a>
+                        </div>
+                    {% endif %}
                 </div>
-            {% endif %}
-        </div>
+        </details>
     </div>
 </div>
 <!-- End -->
-
 <br/>
 <br/>
 <br/>

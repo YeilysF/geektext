@@ -2,15 +2,11 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render, get_object_or_404, redirect
-from django.urls import reverse
 
 from bookstore.models import Book
-from bookstore.views import wishlist_add
-from cart.models import OrderItem, Order, Cart, SavedItem, CartItem
+from cart.forms import CouponApplyForm
+from cart.models import OrderItem, Order, Cart, SavedItem, CartItem, Coupon
 from bookstore.models import Wishlist, WishlistBook
-from users.models import Profile
-from django.http import HttpResponse
-
 
 @login_required
 def cart_start(request):
@@ -26,7 +22,7 @@ def add_to_cart(request, book_id):
         cart = Cart.objects.get(cart_id=cart_start(request))
     except Cart.DoesNotExist:
         cart = Cart.objects.create(cart_id=cart_start(request))
-    cart.save(),
+    cart.save()
     try:
         cart_item = CartItem.objects.get(book=book, cart=cart)
         cart_item.quantity += 1
@@ -36,6 +32,7 @@ def add_to_cart(request, book_id):
         cart_item.save()
     return redirect('cart:cart_page')
 
+
 @login_required
 def add_wishlist_to_cart(request, wishlist_id):
     wishlist_books = WishlistBook.objects.select_related('wb_book').filter(wb_wishlist_id=wishlist_id)
@@ -44,11 +41,16 @@ def add_wishlist_to_cart(request, wishlist_id):
         add_to_cart(request, book.id)
     return redirect('cart:cart_page')
 
+
+def add_to_wishlist(request, book_id):
+    book = Book.objects.get(id=book_id)
+
+
 @login_required
 def remove_from_cart(request, book_id):
-    cart =  Cart.objects.get(cart_id=cart_start(request))
+    cart = Cart.objects.get(cart_id=cart_start(request))
     book = get_object_or_404(Book, id=book_id)
-    cart_item = CartItem.objects.get(book=book,cart=cart)
+    cart_item = CartItem.objects.get(book=book, cart=cart)
     if cart_item.quantity > 1:
         cart_item.quantity -= 1
         cart_item.save()
@@ -56,20 +58,25 @@ def remove_from_cart(request, book_id):
         cart_item.delete()
     return redirect('cart:cart_page')
 
+
 @login_required
 def remove_full_item(request, book_id):
     book = Book.objects.get(id=book_id)
     cart = Cart.objects.get(cart_id=cart_start(request))
-    cart_item = CartItem.objects.get(book=book,cart=cart)
+    cart_item = CartItem.objects.get(book=book, cart=cart)
     cart_item.delete()
+    messages.success(request, 'Item has been removed from cart.')
 
     return redirect('cart:cart_page')
 
+
+@login_required
 def clear_cart(request):
     cart_item = CartItem.objects.all()
     for item in cart_item:
         item.delete()
     return redirect('cart:cart_page')
+
 
 @login_required
 def save_for_later(request, book_id):
@@ -78,19 +85,22 @@ def save_for_later(request, book_id):
     save_book.book = book
     if not SavedItem.objects.filter(book=book).exists():
         save_book.save()
+        messages.info(request, "Item has been moved to Save for Later.")
     else:
-        messages.info(request, "Item is already saved")
+        messages.info(request, "Item is already in Save for Later.")
 
     remove_full_item(request, book_id)
 
     return redirect('cart:cart_page')
 
+
 @login_required
 def remove_from_saved(request, item_id):
-    saved_book = get_object_or_404(SavedItem, id=item_id)
+    saved_book = SavedItem.objects.get(id=item_id)
     saved_book.delete()
 
     return redirect('cart:cart_page')
+
 
 @login_required
 def move_to_cart(request, item_id):
@@ -102,28 +112,60 @@ def move_to_cart(request, item_id):
 
     return redirect('cart:cart_page')
 
+
+@login_required
 def clear(request):
     saved_books = SavedItem.objects.all()
     for items in saved_books:
         items.delete()
     return redirect('cart:cart_page')
 
+def count(request):
+    item_count = 0
+    cart = Cart.objects.filter(cart_id=cart_start(request))
+    cart_items = CartItem.objects.all().filter(cart=cart[:1])
+    for cart_item in cart_items:
+        item_count += cart_item.quantity
+    return item_count
+
 # cart details
-def cart_page(request, total=0, counter=0, cart_items=None, saved_books=None):
+@login_required
+def cart_page(request, discount=0, total_before_discount=0, tax_rate=0, subtotal=0, total=0, item_count=0, saved_count=0, coupons=None, cart_items=None, saved_books=None):
+    coupon_input = CouponApplyForm()
     try:
         cart = Cart.objects.get(cart_id=cart_start(request))
         cart_items = CartItem.objects.filter(cart=cart, active=True)
         saved_books = SavedItem.objects.all()
+        coupons = Coupon.objects.all()
         for cart_item in cart_items:
-            total += (cart_item.book.price * cart_item.quantity)
+            item_count = count(request)
+            subtotal += float(CartItem.sub_total(cart_item))
+            tax_rate = (0.06 * subtotal)
+            total = float(subtotal + tax_rate)
+            total_before_discount = total
+        form = CouponApplyForm(request.POST)
+        if form.is_valid():
+            code = form.cleaned_data['code']
+            try:
+                coupon = Coupon.objects.get(code=code)
+                discount = float(coupon.discount_value)
+                total -= discount
+                messages.info(request, 'Coupon has been applied')
+            except Coupon.DoesNotExist:
+                messages.info(request, 'Coupon is not valid')
+        if saved_books:
+            saved_count = saved_books.count()
     except ObjectDoesNotExist:
         pass
 
-    return render(request, 'cart.html', dict(total=total, counter=counter, cart_items=cart_items, saved_books=saved_books))
+    return render(request, 'cart.html',
+                  dict(coupon_input=coupon_input,discount=discount, total_before_discount=total_before_discount, tax_rate=tax_rate, subtotal=subtotal, total=total, item_count=item_count, saved_count=saved_count, coupons=coupons, cart_items=cart_items, saved_books=saved_books))
 
+@login_required
 def checkout_home(request):
     return render(request, "checkout.html")
 
+@login_required
 def cart_checkout(request):
     cart = Cart.objects.get(cart_id=cart_start(request))
     cart_items = CartItem.objects.filter(cart=cart, active=True)

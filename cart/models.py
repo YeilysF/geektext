@@ -16,12 +16,6 @@ class Cart(models.Model):
     def __str__(self):
         return self.cart_id
 
-    #user = models.ForeignKey(Profile, on_delete=models.CASCADE)
-    #updated_time = models.DateTimeField(blank=True, null=True)
-    #active = models.BooleanField(default=True)
-    #payment_type = models.CharField(max_length=100, null=True)
-    # payment = models.ForeignKey(Payment, on_delete=models.CASCADE)
-
 class CartItem(models.Model):
     """A model that contains data for an item in the shopping cart."""
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
@@ -65,9 +59,6 @@ class Order(models.Model):
     subtotal = models.DecimalField(default=1000.0, max_digits=300, decimal_places=2)
     tax_amount = models.DecimalField(default=1000.0, max_digits=300, decimal_places=2)
 
-    # shipping_address = models.ForeignKey(Address, on_delete=models.CASCADE)
-    # billing_address = models.ForeignKey(Address, on_delete=models.CASCADE)
-    # payment = models.ForeignKey(Payment, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.user
@@ -87,4 +78,9 @@ class SavedItem(models.Model):
     def __str__(self):
         return self.book
 
+class Coupon(models.Model):
+    code = models.CharField(default=1, max_length=15, unique=True, null=False)
+    discount_value = models.DecimalField(decimal_places=2, max_digits=10, default=0)
 
+    def __str__(self):
+        return self.code
