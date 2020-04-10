@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <h2>All Books :</h2>
+    {% for b in books %}
+
+         <ul class="booklist">
+             <li>  <a href="{% url 'book-detail' b.pk %}">{{ b.book_title}}</a></li>
+         </ul>
+
+    {% endfor %}
+
+{% endblock %}
