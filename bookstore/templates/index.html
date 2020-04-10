@@ -1,38 +1,26 @@
 {% extends "base.html" %}
 {% block content %}
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-    <style>
-    body, html{
-        margin-top: 40px;
-    }
-    
-    .w3-content w3-display-container{
-        position: center;
-    }
-.mySlides {
-    display:none;
-    margin-left: 250px;
-}
-</style>
-
 
     <h1>Welcome to the GeekText Bookstore</h1>
     <h5>We are glad to have you here!</h5>
-
     <p>Here are our latest books:</p>
-<div class="w3-content w3-display-container">
 
+<div>
         {% for b in books %}
       <img class="mySlides" onclick="window.location='{{ b.get_absolute_url }}'" src="/media/{{ b.book_cover.url }}" width="200" height="280">
     {% endfor %}
-  <button class="w3-button w3-black w3-display-left" onclick="plusDivs(-1)">&#10094;</button>
-  <button class="w3-button w3-black w3-display-right" onclick="plusDivs(1)">&#10095;</button>
-</div>
-    
+
+  <div style="float: left;">
+    <button class="btn btn-default" onclick="plusDivs(-1)">&#10094; Previous</button>
+  </div>
+
+  <div style="float: right;">
+   <button class="btn btn-default" onclick="plusDivs(-1)">Next &#10095</button>
+  </div>
+
+  </div>
 
 <script>
-
 
 var slideIndex = 1;
 showDivs(slideIndex);
@@ -52,5 +40,5 @@ function showDivs(n) {
   x[slideIndex-1].style.display = "block";
 }
 </script>
-{% endblock %}
 
+{% endblock %}
