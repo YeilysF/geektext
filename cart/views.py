@@ -149,8 +149,11 @@ def cart_page(request, discount=0, total_before_discount=0, tax_rate=0, subtotal
             try:
                 coupon = Coupon.objects.get(code=code)
                 discount = float(coupon.discount_value)
-                total -= discount
-                messages.info(request, 'Coupon has been applied')
+                if total >= discount:
+                    total -= discount
+                    messages.info(request, 'Coupon has been applied')
+                else:
+                    messages.info(request, 'Total cannot be less than discount amount')
             except Coupon.DoesNotExist:
                 messages.info(request, 'Coupon is not valid')
         if saved_books:
