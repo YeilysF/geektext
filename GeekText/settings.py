@@ -54,7 +54,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'geektext.urls'
+ROOT_URLCONF = 'GeekText.urls'
 
 TEMPLATES = [
     {
@@ -67,13 +67,12 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'cart.context_processors.count',
             ],
         },
     },
 ]
 
-WSGI_APPLICATION = 'geektext.wsgi.application'
+WSGI_APPLICATION = 'GeekText.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
