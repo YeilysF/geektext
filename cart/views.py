@@ -159,7 +159,7 @@ def cart_page(request, discount=0, total_before_discount=0, tax_rate=0, subtotal
         pass
 
     return render(request, 'cart.html',
-                  dict(coupon_input=coupon_input,discount=discount, total_before_discount=total_before_discount, tax_rate=tax_rate, subtotal=subtotal, total=total, item_count=item_count, saved_count=saved_count, coupons=coupons, cart_items=cart_items, saved_books=saved_books))
+                  dict(coupon_input=coupon_input, discount=discount, total_before_discount=total_before_discount, tax_rate=tax_rate, subtotal=subtotal, total=total, item_count=item_count, saved_count=saved_count, coupons=coupons, cart_items=cart_items, saved_books=saved_books))
 
 @login_required
 def checkout_home(request):

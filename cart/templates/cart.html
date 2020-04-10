@@ -33,6 +33,10 @@
             color: #2196F3
         }
 
+        #summary2:hover {
+            cursor: pointer;
+            color: hotpink;
+        }
 
     </style>
 </head>
@@ -145,6 +149,15 @@
                             <button type="submit" class="btn px-4 rounded-pill" style="background-color: hotpink; color: white; position: absolute; right: 65px;"><i class="fa fa-gift mr-2"></i>Apply</button>
                         </div>
                  </form>
+                    <br><br><br><br>
+                    {% if coupons %}
+                        <details>
+                            <summary class="font-italic mb-2" id="summary2">See Available Codes ({{ coupons.count }})</summary>
+                            <div class="text-left" style="font-size: 85%">
+                                {% for coupon in coupons %}<li><strong>{{ coupon }}</strong> for ${{ coupon.discount_value }} OFF<br>{% endfor %}
+                             </div>
+                        </details>
+                    {% endif %}
                 {% endif %}
             </div>
         </div>
