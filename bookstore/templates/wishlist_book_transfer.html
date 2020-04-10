@@ -1,17 +1,18 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
 {% block content %}
-    <div class="content-section">
+<div class="card" style="width: 40rem;">
+    <div class="card-body">
         <form method="POST">
             {%  csrf_token %}
             <fieldset class="form-group">
-                <legend class="border-bottom mb-4">Tranfer Book to Another Wishlist</legend>
+                <legend class="border-bottom mb-4">Transfer Book to Another Wishlist</legend>
                 <!-- {{ wishlist_form|crispy }} -->
                 <input type="hidden" name="book_wishlist_id" value="{{wishlist_book.id}}">
                 <select name="book_wishlist_transfer" required="required" class="form-control" placeholder="Select Wishlist">
                     <option disabled="disabled">Select Wishlist</option>
                     {% for wishlist in wishlists %}
-                        <option value="{{wishlist.id}}">{{wishlist.wishlist_name}}</option>                    
+                        <option value="{{wishlist.id}}">{{wishlist.wishlist_name}}</option>
                     {% endfor %}
                 </select>
             </fieldset>
@@ -20,4 +21,4 @@
             </div>
         </form>
     </div>
-{% endblock content %} 
+{% endblock content %}

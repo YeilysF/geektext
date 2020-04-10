@@ -2,12 +2,8 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
 {% block content %}
-    <style>
-    .edit{
-        margin-left: 50px;
-    }
-    </style>
-    <div class="edit">
+
+    <div>
         <form method="POST">
             {%  csrf_token %}
             <fieldset class="form-group">
@@ -19,4 +15,5 @@
             </div>
         </form>
     </div>
+
 {% endblock content %}
