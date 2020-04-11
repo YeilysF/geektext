@@ -10,17 +10,31 @@
         table {
             font-family: arial, sans-serif;
             border-collapse: collapse;
+            border: none;
             width: 100%;
         }
 
-        td, th {
-            border: 1px solid #dddddd;
+        thead{
+            border-bottom: solid;
+            border-top: solid;
+            border-bottom-color: darkgray;
+            border-top-color: darkgray;
+        }
+
+         td {
+             border: none;
+            text-align: left;
+            padding: 8px;
+         }
+
+        th{
+             border: none;
             text-align: left;
             padding: 8px;
         }
 
         tr:nth-child(even) {
-            background-color: #dddddd;
+            background-color: #cbd5db;
         }
 
         .dropbtn {
@@ -90,10 +104,6 @@
         }
 
         /* Style the buttons */
-        button {
-            margin: 3px !important
-        }
-
         .btn {
             border: none;
             outline: none;
@@ -115,7 +125,7 @@
         .rating {
             position: relative;
             top: 1%;
-            left: -5%;
+            left: -10%;
             transform: translate(-50%, -50%) rotateY(180deg);
             display: flex;
         }
@@ -136,7 +146,7 @@
             font-family: fontAwesome;
             postion: relative;
             display: block;
-            font-size: 30px;
+            font-size: 25px;
             color: rgba(9, 9, 9, 0.31);
         }
 
@@ -162,45 +172,38 @@
 
 
     </style>
-    <div class="btn-group">
-        <div class="dropdown">
-            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuGenre"
-                    data-toggle="dropdown"
-                    aria-haspopup="true" aria-expanded="false">Browse by Genre
-            </button>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuGenre">
-                {% for genre in my_genre_list %}
-                    <a class="dropdown-item" href="?genre_selection={{ genre.name }}">{{ genre.name }}</a>
-                {% endfor %}
-            </div>
+    <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuGenre" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">Browse by Genre
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuGenre">
+            {% for genre in my_genre_list %}
+                <a class="dropdown-item" href="?genre_selection={{ genre.name }}">{{ genre.name }}</a>
+            {% endfor %}
         </div>
 
-        <div class="dropdown">
-            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuSort" data-toggle="dropdown"
-                    aria-haspopup="true" aria-expanded="false">Sort
-            </button>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuSort">
-                <a class="dropdown-item" href="?order_by=book_title&direction=asc">Book Title</a>
-                <a class="dropdown-item" href="?order_by=author__first_name&direction=asc">Author</a>
-                <a class="dropdown-item" href="?order_by=price&direction=asc">Price (low-high)</a>
-                <a class="dropdown-item" href="?order_by=price&direction=price">Price (high-low)</a>
-                <a class="dropdown-item" href="?order_by=rating&direction=asc">Rating (low-high)</a>
-                <a class="dropdown-item" href="?order_by=rating&direction=rating">Rating (high-low)</a>
-                <a class="dropdown-item" href="?order_by=release_date&direction=date">Date (new)</a>
-            </div>
+
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuSort" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">Sort
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuSort">
+            <a class="dropdown-item" href="?order_by=book_title&direction=asc">Book Title</a>
+            <a class="dropdown-item" href="?order_by=author__first_name&direction=asc">Author</a>
+            <a class="dropdown-item" href="?order_by=price&direction=asc">Price (low-high)</a>
+            <a class="dropdown-item" href="?order_by=price&direction=price">Price (high-low)</a>
+            <a class="dropdown-item" href="?order_by=rating&direction=asc">Rating (low-high)</a>
+            <a class="dropdown-item" href="?order_by=rating&direction=rating">Rating (high-low)</a>
+            <a class="dropdown-item" href="?order_by=release_date&direction=date">Date (new)</a>
         </div>
+
         <button type="button" class="btn btn-primary"
-                onclick="window.location.href = '?top_sellers_button={{ True }}';">Top Sellers
-        </button>
+                onclick="window.location.href = '?top_sellers_button={{ True }}';">Top Sellers</button>
         <button type="button" class="btn btn-primary"
-                onclick="window.location.href = '??top_sellers_button={{ True }}&order_by=book_title&direction=asc';">
-            Show All
-        </button>
+                onclick="window.location.href = '??top_sellers_button={{ True }}&order_by=book_title&direction=asc';">Show All</button>
     </div>
-
-
-    <h4>Filter by Rating:</h4>
-    <div class="rating">
+ <br> <br>
+    <div style="position: absolute; left: 15px; top: 115px;"><strong>Filter by Rating:</strong></div>
+    <div class="rating" style="position: absolute; left: 210px; top: 155px;">
         <input type="radio" name="star" id="star1"
                onclick="window.location.href = '?ratings_filter_selection=5.0&ratings_filter_selection2=6.0';"><label
             for="star1"></label>
@@ -216,7 +219,7 @@
         <input type="radio" name="star" id="star5"
                onclick="window.location.href = '?ratings_filter_selection=1.0&ratings_filter_selection2=2.0';"><label
             for="star5"></label>
-    </div>
+    </div><br>
 
     <script>
         /* When the user clicks on the button,
@@ -262,13 +265,17 @@
     {% if top_sellers_filter %}
         <table>
             {% if books %}
+                <thead>
                 <tr>
+
                     <th style="text-align:center">Cover</th>
                     <th style="text-align:center">Title</th>
                     <th style="text-align:center">Author</th>
                     <th style="text-align:center">Rating</th>
                     <th style="text-align:center">Price</th>
-                </tr>
+                    <th style="text-align:center">Actions</th>
+
+                </tr> </thead>
                 {% for book in books %}
                     <tr class="clickable text-center">
                     <td><img src="/media/{{ book.book_cover.url }}"
@@ -277,12 +284,13 @@
                     <td onclick="window.location='{{ book.get_absolute_url }}'">{{ book.author }}</td>
                     <td onclick="window.location='{{ book.get_absolute_url }}'">{{ book.rating }}/5⭐</td>
                     <td onclick="window.location='{{ book.get_absolute_url }}'">${{ book.price }}</td>
+
                     <td>
-                        <a class="btn btn-success" style="background-color: #428bca"
+                        <a class="btn btn-success" style="background-color: #428bca; display: flex; align-items: center;justify-content: center"
                            href="{% url 'cart:add_cart' book.id %}">Add to Cart</a>
                         <div class="dropdown">
                             <button onclick="wishlistFunction(event,this, {{ book.id }} )"
-                                    class="btn btn-danger wishlist-dropbtn dropbtn" style="background-color: orangered">
+                                    class="btn btn-danger wishlist-dropbtn dropbtn" style="background-color: orangered; display: flex; align-items: center;justify-content: center">
                                 Add to Wishlist
                             </button>
                             <div id="wishlistDropdown{{ book.id }}" class="dropdown-content wishlist-dropdown">
@@ -459,7 +467,7 @@
                     {% if book.has_other_pages %}
                         <ul class="pagination">
                             {% if books.has_previous %}
-                                <li><a href="?page={{ book.previous_page_number }}">&laquo;</a></li>
+                                <li><a href="?page={{ book.previous_page_number }}">&laquo; </a></li>
                             {% else %}
                                 <li class="disabled"><span>&laquo;</span></li>
                             {% endif %}
@@ -485,23 +493,23 @@
                                     <a href="?page={{ books.previous_page_number }}&order_by={{ order_by }}&direction={{ direction }}">&laquo;</a>
                                 </li>
                             {% else %}
-                                <li class="disabled"><span>&laquo;</span></li>
+                                <li class="disabled"><span>&laquo; </span></li>
                             {% endif %}
                             {% for i in books.paginator.page_range %}
                                 {% if books.number == i %}
-                                    <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+                                    <li class="active"><span> {{ i }} <span class="sr-only">(current)</span></span></li>
                                 {% else %}
                                     <li>
-                                        <a href="?page={{ i }}&order_by={{ order_by }}&direction={{ direction }}">{{ i }}</a>
+                                        <a href="?page={{ i }}&order_by={{ order_by }}&direction={{ direction }}">{{ i }} </a>
                                     </li>
                                 {% endif %}
                             {% endfor %}
                             {% if books.has_next %}
                                 <li>
-                                    <a href="?page={{ books.next_page_number }}&order_by={{ order_by }}&direction={{ direction }}">&raquo;</a>
+                                    <a href="?page={{ books.next_page_number }}&order_by={{ order_by }}&direction={{ direction }}"> &raquo;</a>
                                 </li>
                             {% else %}
-                                <li class="disabled"><span>&raquo;</span></li>
+                                <li class="disabled"><span> &raquo;</span></li>
                             {% endif %}
                         </ul>
                     {% endif %}
@@ -510,6 +518,7 @@
                 <p>There are no books in the library.</p>
             {% endif %}
     {% endif %}
-
-
+<!-- End -->
+<br/>
+<br/>
 {% endblock content %}
