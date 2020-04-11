@@ -87,20 +87,20 @@ def address_add(request):
 @login_required
 def address_edit(request):
     if request.method == 'POST':
-        edit_form = UpdateAddressForm(request.POST, instance=request.address)
-        if edit_form.is_valid():
-            edit_form.save()
+        update_form = UpdateAddressForm(request.POST, instance=request.address)
+        if update_form.is_valid():
+            update_form.save()
             messages.success(request, f'Address changes saved successfully!')
             return redirect('shipping_addresses')
-        else:
-            edit_form = NewAddressForm()
-    return render(request, 'shipping_addresses_add.html', {'edit_form': edit_form})
+    else:
+        update_form = UpdateAddressForm()
+    return render(request, 'shipping_addresses_add.html', {'update_form': update_form})
 
 
-@login_required
-def address_delete(request, address_id):
-    if request.method == 'GET':
-        address = get_object_or_404(Address, id=address_id)
-        address.delete()
-        messages.success(request, f'Address removed successfully!')
-        return redirect('shipping_addresses')
+# @login_required
+# def address_delete(request, address_id):
+#     if request.method == 'GET':
+#         address = get_object_or_404(Address, id=address_id)
+#         address.delete()
+#         messages.success(request, f'Address removed successfully!')
+#         return redirect('shipping_addresses')

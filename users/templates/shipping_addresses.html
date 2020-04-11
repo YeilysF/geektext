@@ -1,12 +1,12 @@
 {% extends "base.html" %}
 {% block content %}
 
-  <h1>Manage Your Addresses</h1>
-    {% for a in address %}
-             <li>  <a href="{% url 'shipping-address' a.id %}">{{ a.address_alias}}</a></li>
-        {% endfor %}
-          <a href="{% url 'address_edit' %}" class="btn btn-warning"><i class="fa fa-angle-center"></i>Edit Address</a>
-          <a href="{% url 'address_add' %}" class="btn btn-warning"><i class="fa fa-angle-center"></i>Add An Address</a>
-
+    <h1>Manage Your Addresses</h1>
+    {% if address.count > 0 %}
+        <li><a href="{% url 'shipping-address' a.id %}">{{ a.address_alias }}</a></li>
+        <a href="{% url 'address_edit' %}" class="btn btn-warning"><i class="fa fa-angle-center"></i>Edit Address</a>
+    {% else %}
+        <a href="{% url 'address_add' %}" class="btn btn-warning"><i class="fa fa-angle-center"></i>Add An Address</a>
+    {% endif %}
 
 {% endblock content %}

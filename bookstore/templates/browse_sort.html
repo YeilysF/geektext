@@ -90,6 +90,10 @@
         }
 
         /* Style the buttons */
+        button {
+            margin: 3px !important
+        }
+
         .btn {
             border: none;
             outline: none;
@@ -158,34 +162,40 @@
 
 
     </style>
-    <div class="dropdown">
-        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuGenre" data-toggle="dropdown"
-                aria-haspopup="true" aria-expanded="false">Browse by Genre
-        </button>
-        <div class="dropdown-menu" aria-labelledby="dropdownMenuGenre">
-            {% for genre in my_genre_list %}
-                <a class="dropdown-item" href="?genre_selection={{ genre.name }}">{{ genre.name }}</a>
-            {% endfor %}
+    <div class="btn-group">
+        <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuGenre"
+                    data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false">Browse by Genre
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuGenre">
+                {% for genre in my_genre_list %}
+                    <a class="dropdown-item" href="?genre_selection={{ genre.name }}">{{ genre.name }}</a>
+                {% endfor %}
+            </div>
         </div>
 
-
-        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuSort" data-toggle="dropdown"
-                aria-haspopup="true" aria-expanded="false">Sort
-        </button>
-        <div class="dropdown-menu" aria-labelledby="dropdownMenuSort">
-            <a class="dropdown-item" href="?order_by=book_title&direction=asc">Book Title</a>
-            <a class="dropdown-item" href="?order_by=author__first_name&direction=asc">Author</a>
-            <a class="dropdown-item" href="?order_by=price&direction=asc">Price (low-high)</a>
-            <a class="dropdown-item" href="?order_by=price&direction=price">Price (high-low)</a>
-            <a class="dropdown-item" href="?order_by=rating&direction=asc">Rating (low-high)</a>
-            <a class="dropdown-item" href="?order_by=rating&direction=rating">Rating (high-low)</a>
-            <a class="dropdown-item" href="?order_by=release_date&direction=date">Date (new)</a>
+        <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuSort" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false">Sort
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuSort">
+                <a class="dropdown-item" href="?order_by=book_title&direction=asc">Book Title</a>
+                <a class="dropdown-item" href="?order_by=author__first_name&direction=asc">Author</a>
+                <a class="dropdown-item" href="?order_by=price&direction=asc">Price (low-high)</a>
+                <a class="dropdown-item" href="?order_by=price&direction=price">Price (high-low)</a>
+                <a class="dropdown-item" href="?order_by=rating&direction=asc">Rating (low-high)</a>
+                <a class="dropdown-item" href="?order_by=rating&direction=rating">Rating (high-low)</a>
+                <a class="dropdown-item" href="?order_by=release_date&direction=date">Date (new)</a>
+            </div>
         </div>
-
         <button type="button" class="btn btn-primary"
-                onclick="window.location.href = '?top_sellers_button={{ True }}';">Top Sellers</button>
+                onclick="window.location.href = '?top_sellers_button={{ True }}';">Top Sellers
+        </button>
         <button type="button" class="btn btn-primary"
-                onclick="window.location.href = '??top_sellers_button={{ True }}&order_by=book_title&direction=asc';">Show All</button>
+                onclick="window.location.href = '??top_sellers_button={{ True }}&order_by=book_title&direction=asc';">
+            Show All
+        </button>
     </div>
 
 
