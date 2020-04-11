@@ -1,3 +1,5 @@
+from datetime import timezone
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
@@ -7,6 +9,8 @@ from bookstore.models import Book
 from cart.forms import CouponApplyForm
 from cart.models import OrderItem, Order, Cart, SavedItem, CartItem, Coupon
 from bookstore.models import Wishlist, WishlistBook
+from users.models import Profile
+
 
 @login_required
 def cart_start(request):
@@ -128,6 +132,25 @@ def count(request):
         item_count += cart_item.quantity
     return item_count
 
+def checkout_home(request, order_id):
+    order_placed = None
+    if order_id:
+        order_placed = Order.objects.get(id=order_id)
+    return render(request, "checkout.html", {'order_placed': order_placed})
+
+def checkout_info(request):
+    cart = Cart.objects.get(cart_id=cart_start(request))
+    cart_items = CartItem.objects.all().filter(cart=cart)
+
+    order_info = Order.objects.create(is_ordered=True)
+    order_info.save()
+    for order_item in cart_items:
+        items = OrderItem.objects.create(book=order_item.book, quantity=order_item.quantity,price=order_item.book.price, order=order_info)
+        items.save()
+        order_item.delete()
+        print("The order has been created")
+    return redirect("cart:checkout_home", order_info.id)
+
 # cart details
 @login_required
 def cart_page(request, discount=0, total_before_discount=0, tax_rate=0, subtotal=0, total=0, item_count=0, saved_count=0, coupons=None, cart_items=None, saved_books=None):
@@ -164,13 +187,4 @@ def cart_page(request, discount=0, total_before_discount=0, tax_rate=0, subtotal
     return render(request, 'cart.html',
                   dict(coupon_input=coupon_input, discount=discount, total_before_discount=total_before_discount, tax_rate=tax_rate, subtotal=subtotal, total=total, item_count=item_count, saved_count=saved_count, coupons=coupons, cart_items=cart_items, saved_books=saved_books))
 
-@login_required
-def checkout_home(request):
-    return render(request, "checkout.html")
 
-@login_required
-def cart_checkout(request):
-    cart = Cart.objects.get(cart_id=cart_start(request))
-    cart_items = CartItem.objects.filter(cart=cart, active=True)
-
-    return redirect("cart:checkout_home")
