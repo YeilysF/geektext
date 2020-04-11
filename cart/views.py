@@ -46,10 +46,6 @@ def add_wishlist_to_cart(request, wishlist_id):
     return redirect('cart:cart_page')
 
 
-def add_to_wishlist(request, book_id):
-    book = Book.objects.get(id=book_id)
-
-
 @login_required
 def remove_from_cart(request, book_id):
     cart = Cart.objects.get(cart_id=cart_start(request))
@@ -142,7 +138,7 @@ def checkout_info(request):
     cart = Cart.objects.get(cart_id=cart_start(request))
     cart_items = CartItem.objects.all().filter(cart=cart)
 
-    order_info = Order.objects.create(is_ordered=True)
+    order_info = Order.objects.create()
     order_info.save()
     for order_item in cart_items:
         items = OrderItem.objects.create(book=order_item.book, quantity=order_item.quantity,price=order_item.book.price, order=order_info)
