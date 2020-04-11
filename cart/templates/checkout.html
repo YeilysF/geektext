@@ -1,15 +1,19 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    Thank you page
+    Thank - GeekText Bookstore
 {% endblock %}
 
 {% block content %}
     <div class="container"><br>
          <div class="text-center">
               <h1 class="display-3">Thank You!</h1>
-             <p class="lead"><strong>Your order has been successfully completed.</strong></p>
               <hr>
+             <br>
+             <p>Your order number is: <b>{{ order_placed.id }}</b></p>
+             <br>
+             <p> The order has been successfully completed.</p>
+             <br>
               <p class="lead">
                 <a style="background-color: darkorange; color: white" class="btn btn-sm" href="{% url 'browse_sort' %}" role="button">Continue Shopping</a>
               </p>
