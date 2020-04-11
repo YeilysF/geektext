@@ -36,6 +36,7 @@ class CartItem(models.Model):
 
 class Order(models.Model):
     created_time = models.DateField(auto_now_add=True, null=True)
+
     is_ordered = models.BooleanField(default=True,  null=True)
 
     def _str_(self):
