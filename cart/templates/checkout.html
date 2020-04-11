@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Thank you page
+{% endblock %}
+
+{% block content %}
+    <div class="container"><br>
+         <div class="text-center">
+              <h1 class="display-3">Thank You!</h1>
+             <p class="lead"><strong>Your order has been successfully completed.</strong></p>
+              <hr>
+              <p class="lead">
+                <a style="background-color: darkorange; color: white" class="btn btn-sm" href="{% url 'browse_sort' %}" role="button">Continue Shopping</a>
+              </p>
+        </div>
+    </div>
+{% endblock %}
