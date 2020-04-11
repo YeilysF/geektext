@@ -75,6 +75,7 @@ class ContactForm(forms.Form):
     email = forms.EmailField()
     message = forms.CharField(widget=forms.Textarea)
 
+
 class Comment(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='comments')
     profile = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments')
@@ -87,6 +88,7 @@ class Comment(models.Model):
 
     def __str__(self):
         return 'Comment {} by {}'.format(self.body, self.profile)
+
 
 # Wishlist
 class Wishlist(models.Model):

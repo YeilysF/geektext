@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
-from .models import Profile
+from .models import Profile, Address
 
 
 class UserRegistrationForm(UserCreationForm):
@@ -23,4 +23,16 @@ class UpdateUserForm(forms.ModelForm):
 class UpdateProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ['image', 'Account_Nickname', 'First_Name', 'Middle_Name', 'Last_Name', 'address1', 'address2', 'zipcode', 'city', 'state', 'country']
+        fields = ['image', 'account_nickname', 'first_name', 'middle_name', 'last_name']
+
+
+class NewAddressForm(forms.ModelForm):
+    class Meta:
+        model = Address
+        fields = ['address_alias', 'line1', 'line2', 'city', 'state', 'postcode', 'country']
+
+
+class UpdateAddressForm(forms.ModelForm):
+    class Meta:
+        model = Address
+        fields = ['address_alias', 'line1', 'line2', 'city', 'state', 'postcode', 'country']

@@ -1,9 +1,11 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from .forms import UserRegistrationForm, UpdateUserForm, UpdateProfileForm
+from .forms import UserRegistrationForm, UpdateUserForm, UpdateProfileForm, NewAddressForm, UpdateAddressForm
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
+
+from .models import Address
 
 
 def register(request):
@@ -58,3 +60,47 @@ def change_password(request):
         return render(request, 'change_password.html', {
             'form': form
         })
+
+
+def address(request):
+    model = Address
+    queryset = model.objects.filter(address_user=request.user)
+    context = {
+        'my-addresses': queryset
+    }
+    return render(request, 'shipping_addresses.html', context=context)
+
+
+@login_required
+def address_add(request):
+    if request.method == 'POST':
+        add_form = NewAddressForm(request.POST, instnace=request.address)
+        if add_form.is_valid():
+            add_form.save()
+            messages.success(request, f'Address added successfully!')
+            return redirect('shipping_addresses')
+    else:
+        add_form = NewAddressForm()
+    return render(request, 'shipping_addresses_add.html', {'add_form': add_form})
+
+
+@login_required
+def address_edit(request):
+    if request.method == 'POST':
+        edit_form = UpdateAddressForm(request.POST, instance=request.address)
+        if edit_form.is_valid():
+            edit_form.save()
+            messages.success(request, f'Address changes saved successfully!')
+            return redirect('shipping_addresses')
+        else:
+            edit_form = NewAddressForm()
+    return render(request, 'shipping_addresses_add.html', {'edit_form': edit_form})
+
+
+@login_required
+def address_delete(request, address_id):
+    if request.method == 'GET':
+        address = get_object_or_404(Address, id=address_id)
+        address.delete()
+        messages.success(request, f'Address removed successfully!')
+        return redirect('shipping_addresses')
