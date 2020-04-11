@@ -178,8 +178,9 @@
                         <h5 class="font-weight-bold">${{ total | floatformat:2}}</h5></li>
                     {% endif %}
                     {% if not cart_items %}
-                </ul><a style="background-color: #428bca; color: white;" class="btn rounded-pill py-2 btn-block disabled"> Proceed to checkout</a> {% else %}
-                </ul><a href="{% url 'cart:checkout' %}" style="background-color: #428bca; color: white" class="btn rounded-pill py-2 btn-block"> Proceed to checkout</a> {% endif %}
+                </ul><a style="background-color: #428bca; color: white;" class="btn rounded-pill py-2 btn-block disabled"> Proceed to checkout</a>
+                    {% else %}
+                </ul><a href="{% url 'cart:checkout_info' %}" style="background-color: #428bca; color: white" class="btn rounded-pill py-2 btn-block"> Proceed to checkout</a> {% endif %}
             </div>
         </div>
     </div>
