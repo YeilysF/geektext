@@ -1,7 +1,6 @@
 from PIL import Image
+from django.db import models
 from django.contrib.auth.models import User
-from django.urls import reverse
-from oscar.models.fields import UppercaseCharField
 from bookstore.models import Book
 from django.db import models
 from django_countries.fields import CountryField
@@ -28,23 +27,3 @@ class Profile(models.Model):
             resized_image = (300, 300)
             img.thumbnail(resized_image)
             img.save(self.image.path)
-
-
-class Address(models.Model):
-    address_user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
-    address_alias = models.CharField("Distinct Address Name", max_length=100)
-    line1 = models.CharField("First line of address", max_length=255, blank=True)
-    line2 = models.CharField("Second line of address", max_length=255, blank=True)
-    city = models.CharField("City", max_length=255, blank=True)
-    state = models.CharField("State/County", max_length=255, blank=True)
-    postcode = UppercaseCharField("Post/Zip-code", max_length=64, blank=True)
-    country = CountryField(blank_label='Select Country')
-
-    def __str__(self):
-        return self.address_alias
-
-    def get_absolute_url(self):
-        return reverse('shipping-address', args=[str(self.id)])
-
-    class Meta:
-        ordering = ['id']
