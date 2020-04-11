@@ -23,7 +23,7 @@ class CartItem(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, null=True, blank=True)
     quantity = models.PositiveIntegerField(default=1, null=True, blank=True)
-    active = models.BooleanField(default=True)
+    active = models.BooleanField(default=True,  null=True,)
 
     class Meta:
         db_table = 'CartItem'
@@ -34,13 +34,13 @@ class CartItem(models.Model):
     def __str__(self):
         return self.book.book_title
 
-
 class Order(models.Model):
     created_time = models.DateField(auto_now_add=True, null=True)
 
+    is_ordered = models.BooleanField(default=True,  null=True)
+
     def _str_(self):
         return str(self.id)
-
 
 class OrderItem(models.Model):
     """A model that contains data for an item in an order."""
@@ -51,7 +51,6 @@ class OrderItem(models.Model):
 
     def __str__(self):
         return '%s: %s' % (self.book.book_title, self.quantity)
-
 
 class SavedItem(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
