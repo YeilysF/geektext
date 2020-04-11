@@ -14,21 +14,21 @@
             width: 100%;
         }
 
-        thead{
+        thead {
             border-bottom: solid;
             border-top: solid;
             border-bottom-color: darkgray;
             border-top-color: darkgray;
         }
 
-         td {
-             border: none;
+        td {
+            border: none;
             text-align: left;
             padding: 8px;
-         }
+        }
 
-        th{
-             border: none;
+        th {
+            border: none;
             text-align: left;
             padding: 8px;
         }
@@ -104,6 +104,10 @@
         }
 
         /* Style the buttons */
+        button {
+            margin: 3px !important
+        }
+
         .btn {
             border: none;
             outline: none;
@@ -172,6 +176,7 @@
 
 
     </style>
+    <div class="btn-group">
     <div class="dropdown">
         <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuGenre" data-toggle="dropdown"
                 aria-haspopup="true" aria-expanded="false">Browse by Genre
@@ -181,8 +186,9 @@
                 <a class="dropdown-item" href="?genre_selection={{ genre.name }}">{{ genre.name }}</a>
             {% endfor %}
         </div>
+    </div>
 
-
+        <div class="dropdown">
         <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuSort" data-toggle="dropdown"
                 aria-haspopup="true" aria-expanded="false">Sort
         </button>
@@ -195,13 +201,17 @@
             <a class="dropdown-item" href="?order_by=rating&direction=rating">Rating (high-low)</a>
             <a class="dropdown-item" href="?order_by=release_date&direction=date">Date (new)</a>
         </div>
+        </div>
 
         <button type="button" class="btn btn-primary"
-                onclick="window.location.href = '?top_sellers_button={{ True }}';">Top Sellers</button>
+                onclick="window.location.href = '?top_sellers_button={{ True }}';">Top Sellers
+        </button>
         <button type="button" class="btn btn-primary"
-                onclick="window.location.href = '??top_sellers_button={{ True }}&order_by=book_title&direction=asc';">Show All</button>
+                onclick="window.location.href = '??top_sellers_button={{ True }}&order_by=book_title&direction=asc';">
+            Show All
+        </button>
     </div>
- <br> <br>
+    <br> <br>
     <div style="position: absolute; left: 15px; top: 115px;"><strong>Filter by Rating:</strong></div>
     <div class="rating" style="position: absolute; left: 210px; top: 155px;">
         <input type="radio" name="star" id="star1"
@@ -275,7 +285,8 @@
                     <th style="text-align:center">Price</th>
                     <th style="text-align:center">Actions</th>
 
-                </tr> </thead>
+                </tr>
+                </thead>
                 {% for book in books %}
                     <tr class="clickable text-center">
                     <td><img src="/media/{{ book.book_cover.url }}"
@@ -286,11 +297,13 @@
                     <td onclick="window.location='{{ book.get_absolute_url }}'">${{ book.price }}</td>
 
                     <td>
-                        <a class="btn btn-success" style="background-color: #428bca; display: flex; align-items: center;justify-content: center"
+                        <a class="btn btn-success"
+                           style="background-color: #428bca; display: flex; align-items: center;justify-content: center"
                            href="{% url 'cart:add_cart' book.id %}">Add to Cart</a>
                         <div class="dropdown">
                             <button onclick="wishlistFunction(event,this, {{ book.id }} )"
-                                    class="btn btn-danger wishlist-dropbtn dropbtn" style="background-color: orangered; display: flex; align-items: center;justify-content: center">
+                                    class="btn btn-danger wishlist-dropbtn dropbtn"
+                                    style="background-color: orangered; display: flex; align-items: center;justify-content: center">
                                 Add to Wishlist
                             </button>
                             <div id="wishlistDropdown{{ book.id }}" class="dropdown-content wishlist-dropdown">
@@ -500,7 +513,8 @@
                             {% endfor %}
                             {% if books.has_next %}
                                 <li>
-                                    <a href="?page={{ books.next_page_number }}&order_by={{ order_by }}&direction={{ direction }}"> &raquo;</a>
+                                    <a href="?page={{ books.next_page_number }}&order_by={{ order_by }}&direction={{ direction }}">
+                                        &raquo;</a>
                                 </li>
                             {% else %}
                                 <li class="disabled"><span> &raquo;</span></li>
@@ -512,7 +526,7 @@
                 <p>There are no books in the library.</p>
             {% endif %}
     {% endif %}
-<!-- End -->
-<br/>
-<br/>
+    <!-- End -->
+    <br/>
+    <br/>
 {% endblock content %}
