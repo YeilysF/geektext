@@ -9,7 +9,6 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-
     <link rel="stylesheet" type="text/css" href="{% static 'main.css' %}">
 
     {% if title %}
@@ -68,12 +67,23 @@
         </div>
        <br>
           <div class="content-section">
-            <h4>Our Sidebar</h4>
-            <p class='text-muted'>You can put any information here you'd like.
+            <h4>Easy Access Toolbar</h4>
+            <p class='text-muted'>Navigate GeekText at ease from here!
               <ul class="list-group">
-              <li class="list-group-item list-group-item-light"> <a href="{% url 'books' %}"/>Books</li>
-              <li class="list-group-item list-group-item-light"> <a href="{% url 'authors' %}"/>Authors</li>
+              {% if user.is_authenticated %}
+              <li class="list-group-item list-group-item-light"> <a href="{% url 'books' %}"/>View Books</li>
+              <li class="list-group-item list-group-item-light"> <a href="{% url 'authors' %}"/>View Authors</li>
+               <li class="list-group-item list-group-item-light"> <a href="{% url 'wishlist' %}"/>My Wishlist</li>
+              <li class="list-group-item list-group-item-light"> <a href="{% url 'cart:cart_page' %}"/>My Shopping Cart</li>
+              <li class="list-group-item list-group-item-light"> <a href="{% url 'profile' %}"/>My Profile</li>
+              {% else %}
+              <li class="list-group-item list-group-item-light"> <a href="{% url 'books' %}"/>View Books</li>
+              <li class="list-group-item list-group-item-light"> <a href="{% url 'authors' %}"/>View Authors</li>
+                  <li class="list-group-item list-group-item-light"> <a href="{% url 'login' %}"/>Wishlist</li>
+              <li class="list-group-item list-group-item-light"> <a href="{% url 'login' %}"/>Shopping Cart</li>
+              <li class="list-group-item list-group-item-light"> <a href="{% url 'login' %}"/>Profile</li>
               </ul>
+              {% endif %}
           </div>
         </div>
       </div>

@@ -1,14 +1,19 @@
 from PIL import Image
 from django.db import models
 from django.contrib.auth.models import User
-
 from bookstore.models import Book
+from django.db import models
+from django_countries.fields import CountryField
 
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    books = models.ManyToManyField(Book, blank=True)
     image = models.ImageField(default='default.png', upload_to='profile_pics')
+    account_nickname = models.CharField('Account Alias/Nickname', max_length=100, default='', null=True, blank=True)
+    first_name = models.CharField('First Name', max_length=100, default='', null=True, blank=True)
+    middle_name = models.CharField('Middle Name', max_length=100, default='', null=True, blank=True)
+    last_name = models.CharField('Last Name', max_length=100, default='', null=True, blank=True)
+    books = models.ManyToManyField(Book, blank=True)
 
     def __str__(self):
         return f'{self.user.username} Profile'

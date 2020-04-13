@@ -1,5 +1,4 @@
 from django.shortcuts import render, get_object_or_404
-
 from users.forms import UpdateUserForm, UpdateProfileForm
 from .models import ContactForm, Book, Author, Genre, Comment
 from users.models import Profile
@@ -19,7 +18,7 @@ from .forms import CommentForm
 
 def index(request):
     books = Book.objects.all()
-    return render(request, 'index.html', {'books' : books})
+    return render(request, 'index.html', {'books': books})
 
 
 def about(request):
@@ -108,7 +107,6 @@ def wishlist_edit(request, wishlist_id):
     return render(request, 'wishlist_edit.html', context)
 
 
-
 @login_required
 def wishlist_delete(request, wishlist_id):
     if request.method == 'GET':
@@ -125,6 +123,7 @@ def wishlist_book_remove(request, wishlist_book_id):
         wishlist_book.delete()
         messages.success(request, f'Book removed from Wishlist successfully!')
         return redirect('wishlist')
+
 
 @login_required
 def wishlist_book_transfer(request, wishlist_book_id):
@@ -170,7 +169,6 @@ def profile(request):
     return render(request, 'profile.html', context)
 
 
-
 def browse_sort_view(request):
     model = Book
 
@@ -181,22 +179,46 @@ def browse_sort_view(request):
         ordering = '-{}'.format(ordering)
     p = (order_by == None)
     q = (order_by != None)
+
     genre_selection = request.GET.get('genre_selection')
     genre_choice = Book.genre
     genre_filter = (genre_selection != None)
-    # fiction_filter = (genre_selection=='fiction')
-    # nonfiction_filter = (genre_selection=='nonfiction')
-
-    # queryset = model.objects.all().order_by(ordering)
     queryset2 = Genre.objects.all()
+
+    top_sellers_button = request.GET.get('top_sellers_button')
+    top_sellers_filter = ((top_sellers_button == None) or (top_sellers_button == False))
+
+
+    ratings_filter_selection = request.GET.get('ratings_filter_selection')
+    ratings_filter = (ratings_filter_selection != None)
+    ratings_filter_selection2 = request.GET.get('ratings_filter_selection2')
+    ratings_filter2 = (ratings_filter_selection2 != None)
+
+    queryset3 = model.objects.all()[3:9]
+
+    r = (genre_filter == True) and (p == True)
+    s = (ratings_filter == True) and (ratings_filter2 == True) and (p == True)
+
+
+
     if genre_filter == True:
         queryset = model.objects.all().filter(genre__name__contains=genre_selection).order_by(ordering)
     else:
         queryset = model.objects.all().filter().order_by(ordering)
 
+    if direction == 'price':
+        queryset = model.objects.all().filter().order_by('-price')
+    if direction == 'rating':
+        queryset = model.objects.all().filter().order_by('-rating')
+    if direction == 'date':
+        queryset = model.objects.all().filter().order_by('-release_date')
+
+    if (ratings_filter == True and ratings_filter2 == True):
+        queryset = model.objects.all().filter(rating__gte=ratings_filter_selection, rating__lt=ratings_filter_selection2).order_by("rating")
+
     page = request.GET.get('page', 1)
 
-    paginator = Paginator(queryset, 4)
+    paginator = Paginator(queryset, 10)
     try:
         books = paginator.page(page)
     except PageNotAnInteger:
@@ -221,15 +243,24 @@ def browse_sort_view(request):
     context = {
         'my_book_list': queryset,
         'my_genre_list': queryset2,
+        'my_book_list2': queryset3,
         'books': books,
         'order_by': order_by,
         'direction': direction,
         'p': p,
         'q': q,
+        'r': r,
+        's': s,
         'genre_selection': genre_selection,
         'genre_choice': genre_choice,
         'genre_filter': genre_filter,
-        'wishlists': wishlists
+        'wishlists': wishlists,
+        'top_sellers_button': top_sellers_button,
+        'top_sellers_filter': top_sellers_filter,
+        'ratings_filter_selection': ratings_filter_selection,
+        'ratings_filter': ratings_filter,
+        'ratings_filter_selection2': ratings_filter_selection2,
+        'ratings_filter2': ratings_filter2
     }
     return render(request, 'browse_sort.html', context=context)
 
@@ -242,22 +273,32 @@ def book_detail_view(request, pk):
 
     comments_query = Comment.objects.filter(book=pk)
 
-    user_profile = Profile.objects.get(user=request.user)
-    owns_book = False
-    if user_profile.books.filter(pk=pk):
-        owns_book = True
+    if request.user.is_authenticated:
+        user_profile = Profile.objects.get(user=request.user)
+        owns_book = False
+        if user_profile.books.filter(pk=pk):
+            owns_book = True
 
-    # Comment posted
-    new_comment = None
-    if request.method == 'POST':
+        # Comment posted
+        new_comment = None
         comment_form = CommentForm(data=request.POST)
-        if comment_form.is_valid():
-            new_comment = comment_form.save(commit=False)
-            new_comment.book = book
-            new_comment.profile = request.user
-            new_comment.save()
+        if request.method == 'POST':
+            if comment_form.is_valid():
+                new_comment = comment_form.save(commit=False)
+                new_comment.book = book
+                new_comment.profile = request.user
+                new_comment.save()
+        else:
+            comment_form = CommentForm()
     else:
-        comment_form = CommentForm()
+        owns_book = False
+        new_comment = None
+        comment_form = CommentForm(data=request.POST)
+        if request.method == 'POST':
+            if comment_form.is_valid():
+                new_comment = comment_form.save(commit=False)
+                new_comment.book = book
+                new_comment.save()
 
     context = {
         'book': book,

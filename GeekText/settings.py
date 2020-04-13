@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+from django.contrib.messages import constants as messages
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -38,6 +39,7 @@ INSTALLED_APPS = [
     'bookstore.apps.BookstoreConfig',
     'cart.apps.CartConfig',
     'users.apps.UsersConfig',
+    'django_countries',
     'crispy_forms',
     'star_ratings',
 ]
@@ -52,7 +54,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'GeekText.urls'
+ROOT_URLCONF = 'geektext.urls'
 
 TEMPLATES = [
     {
@@ -65,13 +67,12 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'cart.context_processors.count',
             ],
         },
     },
 ]
 
-WSGI_APPLICATION = 'GeekText.wsgi.application'
+WSGI_APPLICATION = 'geektext.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
