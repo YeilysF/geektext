@@ -1,5 +1,5 @@
 asgiref==3.2.7
-Django==2.2.13
+Django==2.2.28
 django-braces==1.14.0
 django-countries==6.1.2
 django-credit-cards==0.4.1
